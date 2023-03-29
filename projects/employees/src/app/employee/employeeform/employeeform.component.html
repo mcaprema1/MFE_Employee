@@ -1,0 +1,115 @@
+movierrrs component
+<!-- <div class="row" *ngFor="let movieColumn of movies$ | async">
+  <ng-container *ngFor="let movie of movieColumn; let idx = index">
+    <div *ngIf="idx % 3 === 0" class="column" style="background-color: #aaa">
+      {{ movie.name }}
+    </div>
+    <div *ngIf="idx % 3 === 1" class="column" style="background-color: #bbb">
+      {{ movie.name }}
+    </div>
+    <div *ngIf="idx % 3 === 2" class="column" style="background-color: #ccc">
+      {{ movie.name }}
+    </div>
+  </ng-container>
+</div> -->  
+
+
+<!-- <lib-lib-store>libray </lib-lib-store> -->
+<div class="card m-3">
+  <h2 class="card-header text-center">Employede Details</h2>
+  <div class="card-body">
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2">Employee Id</label>
+          <div class="col-sm-10">
+            <input type="text" formControlName="empId" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['empId'].errors }" />
+            <div *ngIf="submitted && f['empId'].errors" class="invalid-feedback">
+              <div *ngIf="f['empId'].errors['required']">First Name is required</div>
+              <div *ngIf="f['empId'].errors['minlength']">Minimum 3 characters is required</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2" >First Name</label>
+          <div class="col-sm-10">
+            <input type="text" formControlName="first_name" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['first_name'].errors }" />
+            <div *ngIf="submitted && f['first_name'].errors" class="invalid-feedback">
+              <div *ngIf="f['first_name'].errors['required']">First Name is required</div>
+              <div *ngIf="f['first_name'].errors['minlength']">Minimum 3 characters is required</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-horizontal">
+        <div class="form-group ">
+          <label class="control-label col-sm-2" >Last Name</label>
+          <div class="col-sm-10">
+            <input type="text" formControlName="last_name" class="form-control"
+              [ngClass]="{ 'is-invalid': submitted && f['last_name'].errors }" />
+            <div *ngIf="submitted && f['last_name'].errors" class="invalid-feedback">
+              <div *ngIf="f['last_name'].errors['required']">Last Name is required</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="form-horizontal">
+      <div class="form-group">
+        <label class="control-label col-sm-2" >Email</label>
+        <div class="col-sm-10">
+                  <input type="text" formControlName="emailID" class="form-control"
+          [ngClass]="{ 'is-invalid': submitted && f['emailID'].errors }" />
+        <div *ngIf="submitted && f['emailID'].errors" class="invalid-feedback">
+          <div *ngIf="f['emailID'].errors['required']">Email is required</div>
+          <div *ngIf="f['emailID'].errors['emailID']">Email must be a valid</div>
+        </div>
+      </div>
+      </div>
+      </div>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="mobile">Mobile</label>
+          <div class="col-sm-10">
+          <input type="number" formControlName="mobile" class="form-control"
+            [ngClass]="{ 'is-invalid': submitted && f['mobile'].errors }" />
+          <div *ngIf="submitted && f.mobile.errors" class="invalid-feedback">
+            <div *ngIf="f['mobile'].errors['required']">Mobile is required</div>
+            <div *ngIf="f['mobile'].errors['pattern']">Mobile Number must be 10 digits</div>
+          </div>
+        </div>
+      </div>
+      </div>
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2">Address</label>
+          <div class="col-sm-10">
+            <textarea type="text" formControlName="address" class="form-control"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="form-horizontal">
+          <div class="form-group">
+            <label class="form-check-label col-sm-2" style=" text-align: right;" for="flexSwitchCheckChecked">Active</label>
+            <div class="col-sm-10">
+                <div class="form-check form-switch">
+                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                  formControlName="Active" checked>
+                </div>
+            </div>
+          </div>
+      </div>
+      <div class="text-center">
+        <button class="btn btn-primary mr-1">Submit</button>
+        <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<button class="btn btn-primary mr-1"(click)="view()">view Store</button>
+

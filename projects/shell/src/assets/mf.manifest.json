@@ -1,0 +1,4 @@
+{
+	"employees": "http://localhost:4300/remoteEntry.js",
+    "projects": "http://localhost:4400/remoteEntry.js"
+}

@@ -23,7 +23,6 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    HttpClientModule,
     StoreModule.forRoot(
       { employees: employeesReducer },
       {}),

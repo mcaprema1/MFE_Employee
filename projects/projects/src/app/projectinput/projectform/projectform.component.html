@@ -1,0 +1,49 @@
+<!-- <lib-lib-store>libray </lib-lib-store> -->
+<div class="card m-3">
+    <h2 class="card-header text-center">Projects Details</h2>
+    <div class="card-body">
+      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+        <div class="form-horizontal">
+          <div class="form-group">
+            <label class="control-label col-sm-2" for="projectId">Project Id</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="projectId" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['projectId'].errors }" />
+              <div *ngIf="submitted && f['projectId'].errors" class="invalid-feedback">
+                <div *ngIf="f['projectId'].errors['required']">Project Id is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-horizontal">
+          <div class="form-group ">
+            <label class="control-label col-sm-2" for="projectName">Project Name</label>
+            <div class="col-sm-10">
+              <input type="text" formControlName="projectName" class="form-control"
+                [ngClass]="{ 'is-invalid': submitted && f['projectName'].errors }" />
+              <div *ngIf="submitted && f['projectName'].errors" class="invalid-feedback">
+                <div *ngIf="f['projectName'].errors['required']">Project Name is required</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="form-horizontal">
+        <div class="form-group">
+          <label class="control-label col-sm-2" for="email">Description</label>
+          <div class="col-sm-10">
+                <textarea type="text" formControlName="description" class="form-control"></textarea>
+          
+        </div>
+        </div>
+        </div>
+        <div class="text-center">
+          <button class="btn btn-primary mr-1">Submit</button>
+          <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div><br>
+  
+  
+  
+

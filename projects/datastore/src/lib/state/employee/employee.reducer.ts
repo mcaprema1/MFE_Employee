@@ -19,9 +19,12 @@ export const employeesReducer = createReducer(
   on(getEmployees, (state) => ({
     ...state,
   })),
+  // on(saveEmployee, (state, { employees }) => ({
+  //   ...state,
+  //   allEmployees: Array(employees),
+  // }) ),
   on(saveEmployee, (state, { employees }) => ({
-    ...state,
-    allEmployees: Array(employees),
+    ...state, allEmployees: [...state.allEmployees, employees],
   }) ),
 
   on(updateEmployee, state => ({

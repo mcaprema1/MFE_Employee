@@ -10,7 +10,8 @@ module.exports = withModuleFederationPlugin({
   name: 'projects',
 
   exposes: {
-    './Component': './projects/projects/src/app/app.component.ts',
+    // './Component': './projects/projects/src/app/app.component.ts',
+    './Module': './projects/projects/src/app/projectinput/projectinput.module.ts'
   },
 
   shared: {

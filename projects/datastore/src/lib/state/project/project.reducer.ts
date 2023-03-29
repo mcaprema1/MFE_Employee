@@ -6,21 +6,22 @@ import { groupBy } from 'lodash-es';
 import { Action } from "@ngrx/store";
 
 export interface ProjectState {
-  allProject: Project[];
+  allProjects: Project[];
 //   selectedProject: Project;
 }
 
-const initialState: any = []
+const initialState: ProjectState = {
+  allProjects: [],
+};
 
 export const projectReducer = createReducer(
   initialState,
-  on(getProjects, (state, { projects }) => ({
+  on(getProjects, (state) => ({
     ...state,
-    allProjects: projects,
+    // allProjects: projects,
   })),
   on(saveProject, (state, { projects }) => ({
-    ...state,
-    allProjects: Array(projects),
+    ...state, allProjects: [...state.allProjects, projects],
   }) ),
 
   on(updateProject, state => ({

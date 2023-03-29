@@ -20,6 +20,15 @@ const routes: Routes = [
         exposedModule: './Module',
       }).then((m) => m.EmployeeModule),
   },
+  {
+    path: 'project',
+    loadChildren: () =>
+      loadRemoteModule({
+        type: 'manifest',
+        remoteName: 'projects',
+        exposedModule: './Module',
+      }).then((m) => m.ProjectinputModule),
+  },
   // {
   //   path: 'react',
   //   component: WebComponentWrapper,

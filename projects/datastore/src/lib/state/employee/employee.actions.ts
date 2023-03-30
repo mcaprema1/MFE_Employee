@@ -3,16 +3,16 @@ import { Action } from '@ngrx/store';
 import { Employee } from './employee.model';
 
 export const getEmployees = createAction(
-  '[Movie Component] GetEmployee'
+  '[Employee Component] GetEmployee'
 );
 export const saveEmployee = createAction(
-  '[Movie Component] SaveEmployee',
+  '[Employee Component] SaveEmployee',
   props<{ employees: Employee}>()
 );
 console.log("indisede emp actions");
 
 export const updateEmployee= createAction(
-    '[Movie Component] UpdateEmployee',
+    '[Employee Component] UpdateEmployee',
     props<{ employees: any }>()
   );
 

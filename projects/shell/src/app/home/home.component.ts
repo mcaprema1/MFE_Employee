@@ -22,7 +22,7 @@ export class HomeComponent {
   public listOfProject : any =[];
   public fullList : any
   full : any =[];
-  employeesList : any =[];
+  employeesList : Employee[] =[];
   employees$ :  Observable<Employee[]> | undefined
   projects$ :  Observable<Project[]> | undefined
   filteredEmployee$ : Observable<Employee[]> | undefined;
@@ -38,7 +38,7 @@ export class HomeComponent {
     this.employees$ = this.store.select(employeesSelector);
     this.projects$ = this.store.select(projectSelector);
     this.store.select(employeesSelector).subscribe(data =>{
-      this.listOfEmployee = data
+      this.employeesList = data
       this.len = data.length
       console.log("length : ", data.length, this.listOfEmployee
       );
@@ -49,15 +49,15 @@ export class HomeComponent {
       console.log("project length : ", data.length, this.listOfProject
       );
     })
-    // this.filteredEmployee$ = this.filter.valueChanges.pipe(
-    //   startWith(""),
-    //   distinctUntilChanged(),
-    //   debounceTime(1000),
-    //   map(text => {
-    //    let text1= text ? text : '';
-    //     return this.search(text1, pipe);
-    //   })
-    // );
+    this.filteredEmployee$ = this.filter.valueChanges.pipe(
+      startWith(""),
+      distinctUntilChanged(),
+      debounceTime(1000),
+      map(text => {
+       let text1= text ? text : '';
+        return this.search(text1, pipe);
+      })
+    );
     console.log("jjj:", this.employees$, this.filteredEmployee$);
     // this.empStores = store.select('empStore');
   }
@@ -69,22 +69,24 @@ export class HomeComponent {
   
 search(text: string, pipe: PipeTransform) {
   console.log("inn search call", text)
-  return true
-// return this.employeesList.filter(list  => {
-//   // console.log("fff : ", list)
-//   const term = text.toLowerCase();
-//   return (
-//     list.empId.toLowerCase().includes(term) ||
-//     list.first_name.toLowerCase().includes(term) ||
-//     list.last_name.toLowerCase().includes(term) ||
-//     list.emailID.toLowerCase().includes(term) ||
-//     list.address.toLowerCase().includes(term) ||
-//     list.mobile.toString().includes(term)
-//     // list.Active.filter(item => Boolean(item)) ||
-//     // list.Active.valueOf()? String(list.Active).includes('true') : String(list.Active).includes('false')  ||
-//     // pipe.transform(list.mobile).includes(term)
-//   );
-// });
+  let temp = this.employeesList.filter(list  => {
+    console.log("fff : ", list)
+    const term = text.toLowerCase();
+    return (
+      list.empId.toLowerCase().includes(term) ||
+      list.first_name.toLowerCase().includes(term) ||
+      list.last_name.toLowerCase().includes(term) ||
+      list.emailID.toLowerCase().includes(term) ||
+      list.address.toLowerCase().includes(term) ||
+      list.mobile.toString().includes(term) 
+      // list.Active.filter(item => Boolean(item)) ||
+      // list.Active.valueOf()? String(list.Active).includes('true') : String(list.Active).includes('false')  ||
+      // pipe.transform(list.mobile).includes(term)
+    );
+  });
+  console.log("temkkk : ", temp);
+  
+return temp
 // }
 
 }
@@ -94,17 +96,13 @@ saveToStore(){
   // this.viewStore=true;
 }
 
-selectedProject(event : any, row : any, i : number, projectInput : string){
-  // row.projectId=event.target.value
-  // Object.preventExtensions(row);
-  console.log("row : ", row, i,event.target.value);
-  console.log("projectInput : ", projectInput,);
+selectedProject(event : any, row : any, i : number){
   let updateData = { row : row, index: i, projectId:event.target.value }
   this.store.dispatch(updateEmployee({employees : updateData}));
   this.store.select(employeesSelector).subscribe(data =>{
     this.listOfEmployee = data
     this.len = data.length
-    console.log("changes store : ", data.length, this.listOfEmployee
+    console.log("changes in store : ", data.length, this.listOfEmployee
     );
   })
 }

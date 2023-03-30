@@ -3,15 +3,15 @@ import { Action } from '@ngrx/store';
 import { Project } from './project.model';
 
 export const getProjects = createAction(
-  '[Movie Component] GetProject',
+  '[Employee Component] GetProject',
   // props<{ projects: Project[] }>()
 );
 export const saveProject = createAction(
-  '[Movie Component] SaveProject',
+  '[Employee Component] SaveProject',
   props<{ projects: Project }>()
 );
 
 export const updateProject= createAction(
-    '[Movie Component] UpdateProject',
+    '[Employee Component] UpdateProject',
     props<{ projects: Project }>()
   );

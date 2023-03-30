@@ -1,20 +1,4 @@
-movierrrs component
-<!-- <div class="row" *ngFor="let movieColumn of movies$ | async">
-  <ng-container *ngFor="let movie of movieColumn; let idx = index">
-    <div *ngIf="idx % 3 === 0" class="column" style="background-color: #aaa">
-      {{ movie.name }}
-    </div>
-    <div *ngIf="idx % 3 === 1" class="column" style="background-color: #bbb">
-      {{ movie.name }}
-    </div>
-    <div *ngIf="idx % 3 === 2" class="column" style="background-color: #ccc">
-      {{ movie.name }}
-    </div>
-  </ng-container>
-</div> -->  
 
-
-<!-- <lib-lib-store>libray </lib-lib-store> -->
 <div class="card m-3">
   <h2 class="card-header text-center">Employede Details</h2>
   <div class="card-body">
@@ -104,7 +88,7 @@ movierrrs component
           </div>
       </div>
       <div class="text-center">
-        <button class="btn btn-primary mr-1">Submit</button>
+        <button class="btn btn-primary mr-1">Submit {{this.submitted}}</button>
         <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
       </div>
     </form>

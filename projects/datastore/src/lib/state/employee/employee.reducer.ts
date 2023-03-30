@@ -24,13 +24,46 @@ export const employeesReducer = createReducer(
     ...state, allEmployees: [...state.allEmployees, employees],
   }) ),
   
+  // on(updateEmployee,(state, { employees })  => {
+  //   let duplicateEmployee = [...state.allEmployees]
+  //   console.log("tempsssss : ", employees, duplicateEmployee);
+  //   const updatedEmployee = duplicateEmployee.findIndex(
+  //     item => employees.empId=== item.empId ? employees.projectId= employees.projectId : employees);
+  //     console.log("updatedEmployee : ", updatedEmployee);
+  //     return { ...state, allEmployees: [...state.allEmployees, employees] };
+     
+  // })),
   on(updateEmployee,(state, { employees })  => {
-    console.log("tempsssss : ", employees);
-    const updatedEmployee = state.allEmployees.find(
-      item => employees.projectId=== item.projectId ? employees.projectId : employees);
-      console.log("updatedEmployee : ", updatedEmployee);
-      return { ...state, products: updatedEmployee };
-  }))
+  return {
+    ...state,
+    allEmployees: [
+      ...state.allEmployees.slice(0,employees.index),
+       {
+        ...state.allEmployees[employees.index],
+          projectId: employees.projectId
+      },
+        ...state.allEmployees.slice(employees.index + 1)
+      ]
+    }
+  }));
+// return {
+//   ...state,
+//   beneficiaries: {
+//     ...state.beneficiaries,
+//     beneficiaries: [
+//       ...state.beneficiaries.beneficiaries.slice(0, action.index),
+//       {
+//         ...state.beneficiaries.beneficiaries[action.index],
+//         name: action.value
+//       },
+//       ...state.beneficiaries.beneficiaries.slice(action.index + 1)
+//     ]
+//   }
+// };
+// }
 
- 
 
+  // return{...state, allEmployees: state.allEmployees
+  //   .map(navGroup => ({...navGroup}))
+  //   .map(navGroup=>
+  //   {(navGroup.empId===employees.empId) ? {return {...navGroup :else{return navGroup;}}})

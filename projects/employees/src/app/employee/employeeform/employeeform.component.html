@@ -2,13 +2,13 @@
 <div class="card m-3">
   <h2 class="card-header text-center">Employede Details</h2>
   <div class="card-body">
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <form  [formGroup]="registerForm" (ngSubmit)="onSubmit()" id="registerForm">
       <div class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-sm-2">Employee Id</label>
           <div class="col-sm-10">
             <input type="text" formControlName="empId" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f['empId'].errors }" />
+              [ngClass]="{ 'is-invalid': submitted && f['empId'].errors }" id="empId"/>
             <div *ngIf="submitted && f['empId'].errors" class="invalid-feedback">
               <div *ngIf="f['empId'].errors['required']">First Name is required</div>
               <div *ngIf="f['empId'].errors['minlength']">Minimum 3 characters is required</div>
@@ -22,7 +22,7 @@
           <label class="control-label col-sm-2" >First Name</label>
           <div class="col-sm-10">
             <input type="text" formControlName="first_name" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f['first_name'].errors }" />
+              [ngClass]="{ 'is-invalid': submitted && f['first_name'].errors }" id="first_name"/>
             <div *ngIf="submitted && f['first_name'].errors" class="invalid-feedback">
               <div *ngIf="f['first_name'].errors['required']">First Name is required</div>
               <div *ngIf="f['first_name'].errors['minlength']">Minimum 3 characters is required</div>
@@ -35,7 +35,7 @@
           <label class="control-label col-sm-2" >Last Name</label>
           <div class="col-sm-10">
             <input type="text" formControlName="last_name" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f['last_name'].errors }" />
+              [ngClass]="{ 'is-invalid': submitted && f['last_name'].errors }" id="last_name"/>
             <div *ngIf="submitted && f['last_name'].errors" class="invalid-feedback">
               <div *ngIf="f['last_name'].errors['required']">Last Name is required</div>
             </div>
@@ -48,7 +48,7 @@
         <div class="col-sm-10">
                   <input type="text" formControlName="emailID" class="form-control"
           [ngClass]="{ 'is-invalid': submitted && f['emailID'].errors }" />
-        <div *ngIf="submitted && f['emailID'].errors" class="invalid-feedback">
+        <div *ngIf="submitted && f['emailID'].errors" class="invalid-feedback" id="emailId">
           <div *ngIf="f['emailID'].errors['required']">Email is required</div>
           <div *ngIf="f['emailID'].errors['emailID']">Email must be a valid</div>
         </div>

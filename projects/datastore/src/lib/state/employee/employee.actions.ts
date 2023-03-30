@@ -9,7 +9,6 @@ export const saveEmployee = createAction(
   '[Employee Component] SaveEmployee',
   props<{ employees: Employee}>()
 );
-console.log("indisede emp actions");
 
 export const updateEmployee= createAction(
     '[Employee Component] UpdateEmployee',

@@ -19,17 +19,18 @@ export const employeesReducer = createReducer(
   on(getEmployees, (state) => ({
     ...state,
   })),
-  // on(saveEmployee, (state, { employees }) => ({
-  //   ...state,
-  //   allEmployees: Array(employees),
-  // }) ),
+ 
   on(saveEmployee, (state, { employees }) => ({
     ...state, allEmployees: [...state.allEmployees, employees],
   }) ),
-
-  on(updateEmployee, state => ({
-    ...state,
-  }))
   
-);
+  on(updateEmployee,(state, { employees })  => {
+    console.log("tempsssss : ", employees);
+    const updatedEmployee = state.allEmployees.find(
+      item => employees.projectId=== item.projectId ? employees.projectId : employees);
+      console.log("updatedEmployee : ", updatedEmployee);
+      return { ...state, products: updatedEmployee };
+  }))
+
+ 
 

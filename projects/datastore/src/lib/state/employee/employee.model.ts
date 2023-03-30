@@ -6,7 +6,7 @@ export interface Employee {
     mobile : number
     address : string
     Active : boolean
-    projectId ?: string
+    projectId : string
     // Active?: boolean;
   }
 

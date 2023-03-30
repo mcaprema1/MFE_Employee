@@ -5,7 +5,7 @@ import { debounceTime, map, distinctUntilChanged, filter, startWith,
 import { DecimalPipe } from "@angular/common"
 import { Store , select} from '@ngrx/store';
 import { FormControl } from '@angular/forms';
-import { Employee, Project, employeesReducer, employeesSelector, getEmployees} from 'datastore'
+import { Employee, Project, employeesReducer, employeesSelector, getEmployees, projectSelector, updateEmployee, saveEmployee} from 'datastore'
 import { Observable } from 'rxjs';
 import { employees } from 'projects/datastore/src/lib/app.interface';
 
@@ -24,14 +24,31 @@ export class HomeComponent {
   full : any =[];
   employeesList : any =[];
   employees$ :  Observable<Employee[]> | undefined
+  projects$ :  Observable<Project[]> | undefined
   filteredEmployee$ : Observable<Employee[]> | undefined;
   filter = new FormControl("");
   categories$!: Observable<Employee[]>;
+  public len = 0;
+  public len1 = 0;
+  public projectInput =''
 
   Employeelist$:Observable<Employee[]> | any;
   constructor(private store: Store, pipe : DecimalPipe) {
     // this.employeesList =[];
     this.employees$ = this.store.select(employeesSelector);
+    this.projects$ = this.store.select(projectSelector);
+    this.store.select(employeesSelector).subscribe(data =>{
+      this.listOfEmployee = data
+      this.len = data.length
+      console.log("length : ", data.length, this.listOfEmployee
+      );
+    })
+    this.store.select(projectSelector).subscribe(data =>{
+      this.listOfProject = data
+      this.len1 = data.length
+      console.log("project length : ", data.length, this.listOfProject
+      );
+    })
     // this.filteredEmployee$ = this.filter.valueChanges.pipe(
     //   startWith(""),
     //   distinctUntilChanged(),
@@ -73,13 +90,22 @@ search(text: string, pipe: PipeTransform) {
 }
 
 saveToStore(){
-  // let xxx= {'empid' : '1'}
-  //   this.store.dispatch(getEmployees({employees : xxx}));
+  //   this.store.dispatch(updateEmployee());
   // this.viewStore=true;
 }
 
-selectedProject(event : any, row : any, i : number){
-  row.projectId=event.target.value
-  console.log("vvv : ", row, this.employeesList);
+selectedProject(event : any, row : any, i : number, projectInput : string){
+  // row.projectId=event.target.value
+  // Object.preventExtensions(row);
+  console.log("row : ", row, i,event.target.value);
+  console.log("projectInput : ", projectInput,);
+  let updateData = { row : row, index: i, projectId:event.target.value }
+  this.store.dispatch(updateEmployee({employees : updateData}));
+  this.store.select(employeesSelector).subscribe(data =>{
+    this.listOfEmployee = data
+    this.len = data.length
+    console.log("changes store : ", data.length, this.listOfEmployee
+    );
+  })
 }
 }

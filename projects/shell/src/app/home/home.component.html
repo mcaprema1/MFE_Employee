@@ -1,5 +1,32 @@
 <h1>Welcome!</h1>
 
+
+<div *ngIf="len>0 || len1>0"> {{len}}
+
+  <h2 style="text-align: center;">Map Projects with Employees</h2>
+<table style="width:50%;margin-left: 250px;" class="margin-class;">
+  <tr>
+    <th> Project Id </th>
+    <th> Project Name</th>
+  </tr>
+  <!-- <ng-container *ngIf="employees$ | async"> -->
+  <tr *ngFor="let opt of employees$ | async; let i=index;" >
+    <td > 
+      {{opt.empId}}
+    </td> 
+    <td> 
+      <select name="projectInput" (change)="selectedProject($event, opt, i,projectInput )">
+        <option *ngFor="let opt of projects$| async" [value]="opt.projectId">{{opt.project_name}}</option>
+      </select>
+    </td>
+  </tr>
+<!-- </ng-container> -->
+</table>
+
+<br>
+<button (click)="saveToStore()"> Save to Store</button> &nbsp;&nbsp;
+
+
 <h2 class="text-center">List of Employees</h2> 
 <form>
   <div style="display:flex;">
@@ -13,6 +40,10 @@
 </div>
 </form>
 
+
+
+
+
 <table class="table table-striped margin-class" >
   <tr>
     <th> Emp Id </th>
@@ -22,6 +53,7 @@
     <th> Mobile </th>
     <th> Address </th>
     <th> Active</th>
+    <th> Project ID</th>
   </tr>
   <!-- <ng-container *ngIf="employees$ | async"> -->
     <tr *ngFor="let d of this.employees$  | async; let i = index">
@@ -32,6 +64,10 @@
       <td> {{d.mobile}} </td>
       <td> {{d.address}}</td>
       <td>{{d.Active}}</td>
+      <td>{{d.projectId}}</td>
     </tr>
 <!-- </ng-container> -->
 </table>
+
+
+</div>

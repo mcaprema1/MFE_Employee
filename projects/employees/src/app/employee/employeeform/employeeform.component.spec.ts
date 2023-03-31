@@ -3,8 +3,11 @@ import { DebugElement } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
-import { StoreModule } from '@ngrx/store';
-import { employeesReducer } from 'datastore';
+import { Store, StoreModule } from '@ngrx/store';
+import { Employee, employeesReducer, saveEmployee } from 'datastore';
+import { AppState } from 'projects/datastore/src/lib/app.interface';
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpClient } from '@angular/common/http';
 
 import { EmployeeformComponent } from './employeeform.component';
 
@@ -13,14 +16,35 @@ describe('EmployeeformComponent', () => {
   let fixture: ComponentFixture<EmployeeformComponent>;
   let de: DebugElement;
   let el: HTMLElement;
+  let httpMock: HttpTestingController;
+  let store: Store<AppState>;
+  interface EmployeeState {
+    allEmployees: Employee[];
+  //   selectedEmployee: Employee;
+  }
+  const initialState: EmployeeState = {
+      allEmployees: [],
+    };
+  const emp= {
+      "empId" : "ACE10252",
+      "first_name" : "Prema",
+      "last_name" : "Palanisamy",
+      "emailID" : "Prema@gmail.com  ",
+      "mobile" : 9865433214,
+      "address" : "Omr, Chennai",
+      "Active" : true,
+      "projectId":""};
+  let http : HttpClient
+  let SERVER_URL = 'https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/employee/save';
+
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [ EmployeeformComponent ],
       imports: [StoreModule.forRoot(
         { employees: employeesReducer },
         {}),
-      HttpClientModule, 
-    FormsModule, ReactiveFormsModule]
+        HttpClientModule, FormsModule, ReactiveFormsModule
+      ]
     })
     .compileComponents().then(() =>{
       fixture = TestBed.createComponent(EmployeeformComponent);
@@ -30,7 +54,7 @@ describe('EmployeeformComponent', () => {
       de = fixture.debugElement.query(By.css('form'));
       el = de.nativeElement;
     });
-
+    store = TestBed.inject(Store);
     fixture = TestBed.createComponent(EmployeeformComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -80,17 +104,31 @@ describe('EmployeeformComponent', () => {
     expect(last_name.hasError('required') ).toBeTruthy();
   });
 
-  // it('Test  field validity', () => {
-  //   const emailId = component.registerForm.controls.emailId;
-  //   expect(emailId.valid).toBeFalsy();
-  //   emailId.setValue('');
-  //   expect(emailId.hasError('required') ).toBeTruthy();
-  // });
+  it('should call onSubmit method', () => {
+    spyOn(component, 'onSubmit');
+    const button = fixture.debugElement.nativeElement.querySelector('button');
+    button.click();
+    expect(component.onSubmit).toHaveBeenCalled();
+  });
 
-  // it('Test first name has min length 3', () =>{
-  //   const formelement= fixture.debugElement.nativeElement.querySelector('#registerForm')[1];
-  //   const Inputvalue= component.registerForm.get('first_name')
-  //   expect(formelement.value).toBeGreaterThan(2)
-  // })
+  it('Save the employee form Input', () => {
+   
+    const expectedAction = saveEmployee({employees: emp});
+    spyOn(store, 'dispatch');
+    store.dispatch(saveEmployee({employees: emp}));
+    expect(store.dispatch).toHaveBeenCalledWith(expectedAction);
+  });
 
+  
+  it('should save data via POST', () => {
+    http.post(SERVER_URL, emp).subscribe(data  => {
+      expect(data).toEqual(emp);
+    });
+
+    const req = httpMock.expectOne(SERVER_URL);
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(emp);
+
+    req.flush(emp);
+  });
 });

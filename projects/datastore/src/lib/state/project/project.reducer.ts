@@ -8,7 +8,7 @@ import { Action } from "@ngrx/store";
 export interface ProjectState {
   allProjects: Project[];
 //   selectedProject: Project;
-}
+} 
 
 const initialState: ProjectState = {
   allProjects: [],

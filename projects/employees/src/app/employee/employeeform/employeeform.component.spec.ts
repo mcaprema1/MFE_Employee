@@ -4,7 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { Store, StoreModule } from '@ngrx/store';
-import { Employee, employeesReducer, saveEmployee } from 'datastore';
+import { DatastoreService, Employee, employeesReducer, saveEmployee } from 'datastore';
 import { AppState } from 'projects/datastore/src/lib/app.interface';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { HttpClient } from '@angular/common/http';
@@ -16,7 +16,7 @@ describe('EmployeeformComponent', () => {
   let fixture: ComponentFixture<EmployeeformComponent>;
   let de: DebugElement;
   let el: HTMLElement;
-  let httpMock: HttpTestingController;
+  
   let store: Store<AppState>;
   interface EmployeeState {
     allEmployees: Employee[];
@@ -36,6 +36,7 @@ describe('EmployeeformComponent', () => {
       "projectId":""};
   let http : HttpClient
   let SERVER_URL = 'https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/employee/save';
+  let service: DatastoreService;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
@@ -44,7 +45,8 @@ describe('EmployeeformComponent', () => {
         { employees: employeesReducer },
         {}),
         HttpClientModule, FormsModule, ReactiveFormsModule
-      ]
+      ],
+      providers :[HttpClient, DatastoreService]
     })
     .compileComponents().then(() =>{
       fixture = TestBed.createComponent(EmployeeformComponent);
@@ -119,16 +121,58 @@ describe('EmployeeformComponent', () => {
     expect(store.dispatch).toHaveBeenCalledWith(expectedAction);
   });
 
-  
-  it('should save data via POST', () => {
-    http.post(SERVER_URL, emp).subscribe(data  => {
-      expect(data).toEqual(emp);
+  it('should call onReset method', () => {
+    spyOn(component, 'onReset');
+    const button = fixture.debugElement.nativeElement.querySelector('button');
+    button.click();
+    expect(component.registerForm.value).toEqual({
+      "empId" : "",
+      "first_name" : "",
+      "last_name" : "",
+      "emailID" : "",
+      "mobile" : '',
+      "address" : "",
+      "Active" : ''
+     });
+  });
+});
+
+describe('DatastoreService', () => {
+  let service: DatastoreService;
+  let httpMock: HttpTestingController;
+  const emp= {
+    "empId" : "ACE10252",
+    "first_name" : "Prema",
+    "last_name" : "Palanisamy",
+    "emailID" : "Prema@gmail.com  ",
+    "mobile" : 9865433214,
+    "address" : "Omr, Chennai",
+    "Active" : true,
+    "projectId":""};
+    let SERVER_URL = 'https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/employee/save';
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [DatastoreService]
     });
 
+    service = TestBed.inject(DatastoreService);
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+  });
+
+  it('should save data via POST', () => {
+    service.postData(emp).subscribe(data  => {
+      console.log("ddd : ", data, JSON.stringify(emp));      
+      expect(data).toEqual(JSON.stringify(emp));
+    });
     const req = httpMock.expectOne(SERVER_URL);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body).toEqual(emp);
-
+    expect(JSON.stringify(req.request.body)).toEqual(JSON.stringify(emp));
     req.flush(emp);
   });
 });

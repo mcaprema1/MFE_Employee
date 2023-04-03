@@ -13,7 +13,8 @@ import { DatastoreService, getEmployees, Employee, filteredEmloyeeSelector, save
 export class EmployeeformComponent {
   employees$!: Observable<Employee[]>;
 
-  constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient) {
+  constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient,
+    private dataservice : DatastoreService) {
     // this.employees$ = this.store.pipe(filteredEmloyeeSelector);
   }
 
@@ -24,7 +25,7 @@ export class EmployeeformComponent {
 
   registerForm: FormGroup | any;
   submitted = false;
-  SERVER_URL = 'https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/employee/save';
+ 
   fullList: any
 
   ngOnInit() {
@@ -53,16 +54,27 @@ export class EmployeeformComponent {
       responseType: 'text',
       'Content-Type': 'application/json'
     }
-    this.http.post<any>(this.SERVER_URL, this.registerForm.value, requestOptions).subscribe
-      ({
-        next: (res) => {
-          let temp = JSON.parse(res)
-          console.log("res : ", temp);
-          // this.store.dispatch(new EmpAction(temp));
-          this.store.dispatch(saveEmployee({ employees: temp }));
-        },
-        error: (err) => console.log("err : ", err)
-      })
+
+    this.dataservice.postData(this.registerForm.value).subscribe
+    ({
+      next: (res) => {
+        let temp = JSON.parse(res)
+        console.log("res : ", temp);
+        // this.store.dispatch(new EmpAction(temp));
+        this.store.dispatch(saveEmployee({ employees: temp }));
+      },
+      error: (err) => console.log("err : ", err)
+    })
+    // this.http.post<any>(this.SERVER_URL, this.registerForm.value, requestOptions).subscribe
+    //   ({
+    //     next: (res) => {
+    //       let temp = JSON.parse(res)
+    //       console.log("res : ", temp);
+    //       // this.store.dispatch(new EmpAction(temp));
+    //       this.store.dispatch(saveEmployee({ employees: temp }));
+    //     },
+    //     error: (err) => console.log("err : ", err)
+    //   })
   }
 
   onReset() {

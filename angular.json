@@ -353,7 +353,7 @@
             "tsConfig": "projects/datastore/tsconfig.spec.json",
             "polyfills": [
               "zone.js",
-              "zone.js/test,ing"
+              "zone.js/testing"
             ],
 			"codeCoverage": true
           }

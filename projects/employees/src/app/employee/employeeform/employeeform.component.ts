@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -12,21 +12,15 @@ import { DatastoreService, getEmployees, Employee, filteredEmloyeeSelector, save
 })
 export class EmployeeformComponent {
   employees$!: Observable<Employee[]>;
-
-  constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient,
-    private dataservice : DatastoreService) {
-    // this.employees$ = this.store.pipe(filteredEmloyeeSelector);
-  }
-
-  // ngOnInit(): void {
-  //   const movies = this.dataService.getMovies();
-  //   this.store.dispatch(getMovies({ movies }));
-  // }
-
   registerForm: FormGroup | any;
-  submitted = false;
+  myForm : FormGroup | any
+  // public submitted = false;
  
   fullList: any
+
+  constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient,
+    private dataservice : DatastoreService, private changeDetectorRef: ChangeDetectorRef) {
+  }
 
   ngOnInit() {
     this.registerForm = this.formBuilder.group({
@@ -36,20 +30,17 @@ export class EmployeeformComponent {
       emailID: ['', [Validators.required, Validators.email]],
       mobile: ['', [Validators.required, Validators.pattern("[0-9 ]{10}")]],
       address: [''],
-      Active: ['']
+      Active: [true]
     });
-    // const employees = this.dataService.getEmployees();
-    // this.store.dispatch(getEmployees({ employees }));
   }
-  get f() { return this.registerForm.controls; }
+  get f() { 
+    return this.registerForm.controls; }
 
   onSubmit() {
-    console.log("INSIDE : ", this.registerForm.invalid);
-
-    if (this.registerForm.invalid) {
-      return;
-    }
-    this.submitted = true;
+    // this.submitted = true;
+    this.changeDetectorRef.detectChanges()
+    if (this.registerForm.valid) {
+     
     const requestOptions: Object = {
       responseType: 'text',
       'Content-Type': 'application/json'
@@ -59,35 +50,21 @@ export class EmployeeformComponent {
     ({
       next: (res) => {
         let temp = JSON.parse(res)
-        console.log("res : ", temp);
-        // this.store.dispatch(new EmpAction(temp));
         this.store.dispatch(saveEmployee({ employees: temp }));
+        this.onReset()
       },
       error: (err) => console.log("err : ", err)
     })
-    // this.http.post<any>(this.SERVER_URL, this.registerForm.value, requestOptions).subscribe
-    //   ({
-    //     next: (res) => {
-    //       let temp = JSON.parse(res)
-    //       console.log("res : ", temp);
-    //       // this.store.dispatch(new EmpAction(temp));
-    //       this.store.dispatch(saveEmployee({ employees: temp }));
-    //     },
-    //     error: (err) => console.log("err : ", err)
-    //   })
+  }
+  else{
+    alert("Please fill form with correct details")
+  }
   }
 
   onReset() {
-    this.submitted = false;
+    // this.submitted = false;
     this.registerForm.reset();
   }
 
-  view() {
-    // this.store.dispatch(new EmpActions.getEmployees('kk'));
-    this.store.subscribe((data) => {
-      // console.log("view store 1: ", data )
-      // this.fullList = data.empStore;
-      console.log("view store 67: ", data);
-    });
-  }
+  
 }

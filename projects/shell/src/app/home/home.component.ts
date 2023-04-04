@@ -40,14 +40,12 @@ export class HomeComponent {
     this.store.select(employeesSelector).subscribe(data =>{
       this.employeesList = data
       this.len = data.length
-      console.log("length : ", data.length, this.listOfEmployee
-      );
+      // console.log("length : ", data.length, this.listOfEmployee);
     })
     this.store.select(projectSelector).subscribe(data =>{
       this.listOfProject = data
       this.len1 = data.length
-      console.log("project length : ", data.length, this.listOfProject
-      );
+      // console.log("project length : ", data.length, this.listOfProject );
     })
     this.filteredEmployee$ = this.filter.valueChanges.pipe(
       startWith(""),
@@ -58,7 +56,7 @@ export class HomeComponent {
         return this.search(text1, pipe);
       })
     );
-    console.log("jjj:", this.employees$, this.filteredEmployee$);
+    // console.log("jjj:", this.employees$, this.filteredEmployee$);
     // this.empStores = store.select('empStore');
   }
   
@@ -68,9 +66,9 @@ export class HomeComponent {
 
   
 search(text: string, pipe: PipeTransform) {
-  console.log("inn search call", text)
+  // console.log("inn search call", text)
   let temp = this.employeesList.filter(list  => {
-    console.log("fff : ", list)
+    // console.log("fff : ", list)
     const term = text.toLowerCase();
     return (
       list.empId.toLowerCase().includes(term) ||
@@ -78,22 +76,16 @@ search(text: string, pipe: PipeTransform) {
       list.last_name.toLowerCase().includes(term) ||
       list.emailID.toLowerCase().includes(term) ||
       list.address.toLowerCase().includes(term) ||
-      list.mobile.toString().includes(term) 
+      list.mobile.toString().includes(term) ||
+      String(list.Active) === term
       // list.Active.filter(item => Boolean(item)) ||
       // list.Active.valueOf()? String(list.Active).includes('true') : String(list.Active).includes('false')  ||
       // pipe.transform(list.mobile).includes(term)
     );
   });
-  console.log("temkkk : ", temp);
+  console.log("temo : ", temp);
   
 return temp
-// }
-
-}
-
-saveToStore(){
-  //   this.store.dispatch(updateEmployee());
-  // this.viewStore=true;
 }
 
 selectedProject(event : any, row : any, i : number){
@@ -102,8 +94,6 @@ selectedProject(event : any, row : any, i : number){
   this.store.select(employeesSelector).subscribe(data =>{
     this.listOfEmployee = data
     this.len = data.length
-    console.log("changes in store : ", data.length, this.listOfEmployee
-    );
   })
 }
 }

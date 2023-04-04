@@ -6,6 +6,7 @@ import { EmployeeformComponent } from './employeeform/employeeform.component';
 import { routes } from './employee-routing.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http'
+import { DatastoreService } from 'datastore';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import {HttpClientModule} from '@angular/common/http'
     FormsModule,
     HttpClientModule,
     RouterModule.forChild(routes)
-  ]
+  ],
+  providers :[DatastoreService]
 })
 export class EmployeeModule { }

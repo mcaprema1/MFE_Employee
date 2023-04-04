@@ -8,11 +8,12 @@ import { employeesReducer, EmployeeState, projectReducer, ProjectState,
   saveProject,
   projectSelector} from 'datastore';
 import { Store, provideStore } from '@ngrx/store';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home.component';
 import { AppState, employees } from 'projects/datastore/src/lib/app.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -66,14 +67,15 @@ const initialState: EmployeeState = {
         StoreModule.forRoot(
           { employees: employeesReducer,  projects : projectReducer },
           {}),
-          HttpClientModule
+          HttpClientModule, FormsModule, ReactiveFormsModule
       ],  
       providers: [
         // provideStore({initialState}),
-        DatastoreService
+        DatastoreService,
       ],
     })
     .compileComponents();
+    service = TestBed.inject(DatastoreService);
     store = TestBed.inject(Store);
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
@@ -117,14 +119,18 @@ const initialState: EmployeeState = {
     });
     expect(actualData).toEqual(expectedData);
 
-  //   const fixture1 = TestBed.createComponent(HomeComponent);
-  //   const component1 = fixture1.componentInstance;
-  // const table = fixture1.nativeElement.querySelector('table');
+  
+//   const table = fixture.nativeElement.querySelector('table.margin-class1');
+//   const emp$ = of(actualData);
+
+//   component.employees$= emp$;
+
+//   fixture.detectChanges();
+// console.log("ssss : ",  component.employees$);
    
-  //   fixture.detectChanges();
-  //   const tableRows = fixture.nativeElement.querySelectorAll('tr');
-  //   const rows = table?.rows; // use optional chaining operator to check if rows exists
-  // expect(rows?.length).toBe(3);
+//   const rows = table.rows;
+//   console.log("rows length : ", table, table.rows)
+//   expect(rows.length).toBe(3);
   //   console.log("rows length : ", tableRows.length, expectedData.length);
     
   //   let headerRow = tableRows[0];
@@ -164,5 +170,6 @@ const initialState: EmployeeState = {
      // expect(store.dispatch).toHaveBeenCalledWith(getData());
    });
 
+   
   
 });

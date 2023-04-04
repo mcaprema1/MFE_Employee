@@ -1,4 +1,3 @@
-<!-- <lib-lib-store>libray </lib-lib-store> -->
 <div class="card m-3">
     <h2 class="card-header text-center">Projects Details</h2>
     <div class="card-body">
@@ -7,10 +6,9 @@
           <div class="form-group">
             <label class="control-label col-sm-2" for="projectId">Project Id</label>
             <div class="col-sm-10">
-              <input type="text" formControlName="projectId" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['projectId'].errors }" />
-              <div *ngIf="submitted && f['projectId'].errors" class="invalid-feedback">
-                <div *ngIf="f['projectId'].errors['required']">Project Id is required</div>
+              <input type="text" formControlName="projectId" class="form-control" />
+              <div class="error-msg" *ngIf="projectForm.get('projectId').errors && projectForm.get('projectId').touched">
+                <div *ngIf="projectForm.get('projectId').errors.required">Project Id is required</div>
               </div>
             </div>
           </div>
@@ -19,10 +17,9 @@
           <div class="form-group ">
             <label class="control-label col-sm-2" for="project_name">Project Name</label>
             <div class="col-sm-10">
-              <input type="text" formControlName="project_name" class="form-control"
-                [ngClass]="{ 'is-invalid': submitted && f['project_name'].errors }" />
-              <div *ngIf="submitted && f['project_name'].errors" class="invalid-feedback">
-                <div *ngIf="f['project_name'].errors['required']">Project Name is required</div>
+              <input type="text" formControlName="project_name" class="form-control"/>
+              <div class="error-msg" *ngIf="projectForm.get('project_name').errors && projectForm.get('projectId').touched">
+                <div *ngIf="projectForm.get('project_name').errors.required">Project Name is required</div>
               </div>
             </div>
           </div>

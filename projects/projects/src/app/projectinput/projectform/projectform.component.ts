@@ -13,7 +13,6 @@ import { DatastoreService, Project, saveProject } from 'datastore'
 export class ProjectformComponent {
   employees$!: Observable<Project[]>;
   projectForm: FormGroup | any;
-  submitted = false;
   POSTMAN_PROJECT_URL = 'https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/project/save';
 
   constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient) {
@@ -31,10 +30,7 @@ export class ProjectformComponent {
   get f() { return this.projectForm.controls; }
 
   onSubmit() {
-    this.submitted = true;
-    if (this.projectForm.invalid) {
-      return;
-    }
+    if (this.projectForm.valid) {
     const requestOptions: Object = {
       responseType: 'text',
       'Content-Type': 'application/json'
@@ -48,9 +44,11 @@ export class ProjectformComponent {
         },
         error: (err) => console.log("err : ", err)
       })
+    }else{
+      alert("Please file the foem with correct details")
+    }
   }
   onReset() {
-    this.submitted = false;
     this.projectForm.reset();
   }
 

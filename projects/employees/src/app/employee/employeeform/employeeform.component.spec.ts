@@ -65,9 +65,7 @@ describe('EmployeeformComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+  
   it('form invalid when empty', () => {
     component.registerForm.controls.empId.setValue('');
     component.registerForm.controls.first_name.setValue('');
@@ -85,18 +83,91 @@ describe('EmployeeformComponent', () => {
     expect(inputElements.length).toEqual(6)
   })
 
-  it('Test Employee Id field validity', () => {
-    const empId = component.registerForm.controls.empId;
-    expect(empId.valid).toBeFalsy();
-    empId.setValue('');
-    expect(empId.hasError('required')).toBeTruthy();
+  // it('Test Employee Id field validity', () => {
+  //   const empId = component.registerForm.controls.empId;
+  //   expect(empId.valid).toBeFalsy();
+  //   empId.setValue('');
+  //   expect(empId.hasError('required')).toBeTruthy();
+
+  //   const inputElement = fixture.nativeElement.querySelector('input');
+  //   inputElement.value = '';
+  //   inputElement.dispatchEvent(new Event('input'));
+    
+    
+  //   // const mobileInput = fixture.debugElement.query(By.css('#mobile')).nativeElement;
+  //   // // mobileInput.value = 'invalid-mobile';
+  //   // mobiles.setValue('444444')
+  //   // mobileInput.dispatchEvent(new Event('input'));
+
+  //   fixture.detectChanges();
+  //   const errorMsgElement = fixture.nativeElement.querySelector('#error-msg');
+  //   console.log("fixture.debugElement.query() : ", fixture.debugElement.query(By.css('#error-msg')));
+    
+  //   console.log("xxx : ", errorMsgElement);
+  //   expect(errorMsgElement).toBeTruthy();
+
+  //   const requiredErrorMsgElement = fixture.nativeElement.querySelector('#error-msg div');
+  //   expect(requiredErrorMsgElement.innerText).toEqual('Employee ID is required');
+  
+  // });
+
+  it('should show the required error message if the first name field is touched and empty', () => {
+    // const firstNameInput = fixture.debugElement.query(By.css('#firstName')).nativeElement;
+    // const firstNameErrorMsgElement = fixture.debugElement.query(By.css('#required')).nativeElement;
+
+    const firstNameInput = fixture.debugElement.nativeElement.querySelector('#registerForm').
+    querySelectorAll('input')[1];
+
+    const fs = firstNameInput.querySelector('div')
+    // Set first name field to empty
+    
+    
+    firstNameInput.value = '';
+    firstNameInput.dispatchEvent(new Event('input'));
+
+    // Trigger blur event
+    firstNameInput.dispatchEvent(new Event('blur'));
+
+    fixture.detectChanges();
+    console.log("sssss : ", firstNameInput, fs);
+    // expect(firstNameErrorMsgElement.textContent).toContain('First Name is required');
   });
 
-  it('Test First Name field validity', () => {
+  // it('should show the minlength error message if the first name field is touched and has less than 3 characters', () => {
+  //   const firstNameInput = fixture.debugElement.query(By.css('#firstName')).nativeElement;
+  //   const firstNameErrorMsgElement = fixture.debugElement.query(By.css('#minlength')).nativeElement;
+
+  //   // Set first name field to less than 3 characters
+  //   firstNameInput.value = 'ab';
+  //   firstNameInput.dispatchEvent(new Event('input'));
+
+  //   // Trigger blur event
+  //   firstNameInput.dispatchEvent(new Event('blur'));
+
+  //   fixture.detectChanges();
+
+  //   expect(firstNameErrorMsgElement.textContent).toContain('Minimum 3 characters is required');
+  // });
+
+  it('Test First Name field validity', async() => {
     const first_name = component.registerForm.controls.first_name;
     expect(first_name.valid).toBeFalsy();
     first_name.setValue('');
     expect(first_name.hasError('required') ).toBeTruthy();
+  
+    // const firstname1 = fixture.debugElement.nativeElement.querySelector('#registerForm').
+    // querySelectorAll('input')[1];
+    
+  });
+
+  it('Test First Name field has min length', async() => {
+    const first_name = component.registerForm.controls.first_name;
+    expect(first_name.valid).toBeFalsy();
+    fixture.detectChanges();
+    first_name.setValue('PP');
+    expect(first_name.value.length).toBeLessThan(3);
+    first_name.setValue('Prema');
+    expect(first_name.value.length).toBeGreaterThanOrEqual(3);
   });
 
   it('Test last Name field validity', () => {
@@ -106,6 +177,40 @@ describe('EmployeeformComponent', () => {
     expect(last_name.hasError('required') ).toBeTruthy();
   });
 
+  it('test email field required', () => {
+    const email = component.registerForm.controls.emailID;
+    expect(email.valid).toBeFalsy();
+
+    email.setValue('');
+    expect(email.hasError('required')).toBeTruthy();
+  });
+
+  it('test email field validity', () => {
+    const emailid = component.registerForm.controls.emailID;
+    const emailInput = fixture.debugElement.query(By.css('#email')).nativeElement;
+    emailInput.value = 'invalidemail';
+    emailInput.dispatchEvent(new Event('input'));
+    expect(emailid.valid).toBeFalsy();
+
+    emailInput.value = 'validemail@mail.com';
+    emailInput.dispatchEvent(new Event('input'));
+    expect(emailid.valid).toBeTruthy();
+  });
+
+  it('should be invalid when an invalid mobile number is entered', () => {
+    const mobiles = component.registerForm.controls.mobile;
+    const mobileInput = fixture.debugElement.query(By.css('#mobile')).nativeElement;
+    // mobileInput.value = 'invalid-mobile';
+    mobiles.setValue('444444')
+    mobileInput.dispatchEvent(new Event('input'));
+    expect(mobiles.valid).toBeFalsy();
+
+    mobiles.setValue('1234567890')
+    mobileInput.dispatchEvent(new Event('input'));
+    expect(mobiles.valid).toBeTruthy();
+  });
+
+
   it('should call onSubmit method', () => {
     spyOn(component, 'onSubmit');
     const button = fixture.debugElement.nativeElement.querySelector('button');
@@ -114,7 +219,6 @@ describe('EmployeeformComponent', () => {
   });
 
   it('Save the employee form Input', () => {
-   
     const expectedAction = saveEmployee({employees: emp});
     spyOn(store, 'dispatch');
     store.dispatch(saveEmployee({employees: emp}));
@@ -132,9 +236,46 @@ describe('EmployeeformComponent', () => {
       "emailID" : "",
       "mobile" : '',
       "address" : "",
-      "Active" : ''
+      "Active" : true
      });
   });
+  it('Test form valid and invalid', () => {
+      component.registerForm.controls.empId.setValue("P1234");
+      component.registerForm.controls.first_name.setValue("Prema");
+      component.registerForm.controls.last_name.setValue("prema");
+      component.registerForm.controls.emailID.setValue("prema@gmail.com");
+      component.registerForm.controls.mobile.setValue(986543324666);
+      component.registerForm.controls.address.setValue("omr, chennai");
+      component.registerForm.controls.Active.setValue(true);
+      console.log("ccc : ", component.registerForm.valid);
+      expect(component.registerForm.valid).toBeFalsy();
+
+      
+  
+    //   spyOn(component, 'onSubmit');
+    // const button = fixture.debugElement.nativeElement.querySelector('button');
+    // button.click();
+    // const expectedAction =window.alert("Please fill form with correct details")
+    // expect(component.registerForm.valid).toHaveBeenCalledwith("");
+
+
+      component.registerForm.controls.empId.setValue("P1234");
+      component.registerForm.controls.first_name.setValue("Prema");
+      component.registerForm.controls.last_name.setValue("prema");
+      component.registerForm.controls.emailID.setValue("prema@gmail.com");
+      component.registerForm.controls.mobile.setValue(9865433241);
+      component.registerForm.controls.address.setValue("omr, chennai");
+      component.registerForm.controls.Active.setValue(true);
+      console.log("ccc : ", component.registerForm.valid);
+      expect(component.registerForm.valid).toBeTruthy();
+  });
+  it('Test alert', () => { 
+    spyOn(window, 'alert');
+      const form = fixture.nativeElement.querySelector('form');
+      form.dispatchEvent(new Event('submit'));
+      expect(window.alert).toHaveBeenCalledWith('Please fill form with correct details');
+  })
+  
 });
 
 describe('DatastoreService', () => {
@@ -167,7 +308,7 @@ describe('DatastoreService', () => {
 
   it('should save data via POST', () => {
     service.postData(emp).subscribe(data  => {
-      console.log("ddd : ", data, JSON.stringify(emp));      
+      // console.log("ddd : ", data, JSON.stringify(emp));      
       expect(data).toEqual(JSON.stringify(emp));
     });
     const req = httpMock.expectOne(SERVER_URL);

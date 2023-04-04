@@ -47,7 +47,7 @@
           <label class="control-label col-sm-2">Employee Id</label>
           <div class="col-sm-10">
             <input type="text" formControlName="empId" id="empId" class="form-control"/>
-            <div class="error-msg" *ngIf="registerForm.get('empId').errors && registerForm.get('empId').touched">
+            <div class="error-msg" id="error-msg" *ngIf="registerForm.get('empId').errors && registerForm.get('empId').touched">
               <div *ngIf="registerForm.get('empId').errors.required">Employee ID is required</div>
             </div>
           </div>
@@ -60,9 +60,9 @@
           <div class="col-sm-10">
             <input type="text" formControlName="first_name" class="form-control"
              id="first_name"/>
-            <div class="error-msg" *ngIf="registerForm.get('first_name').errors  && registerForm.get('first_name').touched "  >
-              <div *ngIf="registerForm.get('first_name').errors.required">First Name is required</div>
-              <div *ngIf="registerForm.get('first_name').errors.minlength">Minimum 3 characters is required</div>
+            <div class="error-msg" id="minlength" *ngIf="registerForm.get('first_name').errors  && registerForm.get('first_name').touched "  >
+              <div id="required" *ngIf="registerForm.get('first_name').errors.required">First Name is required</div>
+              <div  *ngIf="registerForm.get('first_name').errors.minlength">Minimum 3 characters is required</div>
             </div>
           </div>
         </div>
@@ -83,7 +83,7 @@
       <div class="form-group">
         <label class="control-label col-sm-2" >Email</label>
         <div class="col-sm-10">
-                  <input type="text" formControlName="emailID" class="form-control"/>
+                  <input type="email" id="email" formControlName="emailID" class="form-control"/>
         <div  class="error-msg" *ngIf="registerForm.get('emailID').errors && registerForm.get('emailID').touched" id="emailId">
           <div *ngIf="registerForm.get('emailID').errors.required">Email is required</div>
           <div  *ngIf="registerForm.get('emailID').errors.email">Email must be a valid</div>
@@ -95,7 +95,7 @@
         <div class="form-group">
           <label class="control-label col-sm-2" for="mobile">Mobile</label>
           <div class="col-sm-10">
-          <input type="number" formControlName="mobile" class="form-control"/>
+          <input type="number" formControlName="mobile" class="form-control"  id="mobile"/>
           <div class="error-msg" *ngIf="registerForm.get('mobile').errors && registerForm.get('mobile').touched">
             <div *ngIf="registerForm.get('mobile').errors.required">Mobile is required</div>
             <div *ngIf="registerForm.get('mobile').errors.pattern">Mobile Number must be 10 digits</div>

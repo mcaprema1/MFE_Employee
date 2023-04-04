@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import {Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -11,15 +11,13 @@ import { DatastoreService, getEmployees, Employee, filteredEmloyeeSelector, save
   styleUrls: ['./employeeform.component.scss']
 })
 export class EmployeeformComponent {
-  employees$!: Observable<Employee[]>;
   registerForm: FormGroup | any;
-  myForm : FormGroup | any
   // public submitted = false;
  
   fullList: any
 
   constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient,
-    private dataservice : DatastoreService, private changeDetectorRef: ChangeDetectorRef) {
+    private dataservice : DatastoreService) {
   }
 
   ngOnInit() {
@@ -33,14 +31,9 @@ export class EmployeeformComponent {
       Active: [true]
     });
   }
-  get f() { 
-    return this.registerForm.controls; }
 
   onSubmit() {
-    // this.submitted = true;
-    this.changeDetectorRef.detectChanges()
     if (this.registerForm.valid) {
-     
     const requestOptions: Object = {
       responseType: 'text',
       'Content-Type': 'application/json'

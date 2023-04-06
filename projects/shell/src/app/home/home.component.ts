@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, PipeTransform, ChangeDetectorRef } from '@angular/core';
+import { Component, ViewChild, ElementRef, PipeTransform, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { HttpClient, HttpParams  } from '@angular/common/http';
 import { debounceTime, map, distinctUntilChanged, filter, startWith,
    switchMap, tap, delay } from "rxjs/operators";
@@ -9,11 +9,13 @@ import { Employee, Project, employeesReducer, employeesSelector, getEmployees, p
 import { Observable } from 'rxjs';
 import { employees } from 'projects/datastore/src/lib/app.interface';
 
+
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  providers: [DecimalPipe]
+  providers: [DecimalPipe],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HomeComponent {
 
@@ -30,7 +32,7 @@ export class HomeComponent {
   categories$!: Observable<Employee[]>;
   public len = 0;
   public len1 = 0;
-  public projectInput =''
+  public projectInput ='';
 
   Employeelist$:Observable<Employee[]> | any;
   constructor(private store: Store, pipe : DecimalPipe, private cf : ChangeDetectorRef) {
@@ -80,9 +82,6 @@ return temp
 }
 
 selectedProject( projectInput : any, row : any, i : number){
-  console.log("pi ", projectInput, projectInput.target.value );
-  console.log("dfdf ", projectInput, i, row);
-  
   let updateData = { row : row, index: i, projectId:projectInput.target.value }
   this.store.dispatch(updateEmployee({employees : updateData}));
   this.employees$ = this.store.select(employeesSelector);

@@ -20,9 +20,11 @@ export const employeesReducer = createReducer(
     ...state,
   })),
  
-  on(saveEmployee, (state, { employees }) => ({
-    ...state, allEmployees: [...state.allEmployees, employees],
-  }) ),
+  on(saveEmployee, (state, { employees }) => {
+    console.log("saved employee", state, employees);
+    alert("Data has been saved in Store")
+    return {...state, allEmployees: [...state.allEmployees, employees]}
+  }),
   
   // on(updateEmployee,(state, { employees })  => {
   //   let duplicateEmployee = [...state.allEmployees]

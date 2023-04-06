@@ -22,16 +22,7 @@ export class DatastoreService {
   postProjectData(data: any): Observable<any> {
     return this.http.post(this.projectapiUrl, data, this.requestOptions)
   }
-
   
-  // this.http.post<any>(this.SERVER_URL, this.registerForm.value, requestOptions, requestOptions).subscribe
-  //     ({
-  //       next: (res) => {
-  //         let temp = JSON.parse(res)
-  //         console.log("res : ", temp);
-  //         // this.store.dispatch(new EmpAction(temp));
-  //         this.store.dispatch(saveEmployee({ employees: temp }));
-  //       },
-  //       error: (err) => console.log("err : ", err)
-  //     })
+  
+  
 }

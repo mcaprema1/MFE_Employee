@@ -25,12 +25,20 @@ module.exports = function (config) {
       suppressAll: true // removes the duplicated traces
     },
     coverageReporter: {
-      dir: require('path').join(__dirname, '../../coverage/employees'),
+      dir: require('path').join(__dirname, '../../coverage/employees/src'),
       subdir: '.',
       reporters: [
         { type: 'html' },
         { type: 'text-summary' }
-      ]
+      ],
+      check: {
+        global: {
+          statements: 80,
+          branches: 80,
+          functions: 80,
+          lines: 80
+        }
+      }
     },
     reporters: ['progress', 'kjhtml'],
     browsers: ['Chrome'],

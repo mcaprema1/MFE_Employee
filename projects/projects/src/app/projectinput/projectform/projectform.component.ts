@@ -15,7 +15,8 @@ export class ProjectformComponent {
   projectForm: FormGroup | any;
   POSTMAN_PROJECT_URL = 'https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/project/save';
 
-  constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient) {
+  constructor(private store: Store, private formBuilder: FormBuilder, private http: HttpClient,
+    private dataservice: DatastoreService) {
     // this.employees$ = this.store.pipe(filteredEmloyeeSelector);
   }
 
@@ -26,26 +27,18 @@ export class ProjectformComponent {
       description: [''],
     });
   }
-
-  get f() { return this.projectForm.controls; }
-
   onSubmit() {
     if (this.projectForm.valid) {
-    const requestOptions: Object = {
-      responseType: 'text',
-      'Content-Type': 'application/json'
-    }
-    this.http.post<any>(this.POSTMAN_PROJECT_URL, this.projectForm.value, requestOptions).subscribe
-      ({
-        next: (res) => {
-          console.log("res  project : ", res);
-          let temp = JSON.parse(res)
-          this.store.dispatch(saveProject({ projects: temp }));
-        },
-        error: (err) => console.log("err : ", err)
-      })
-    }else{
-      alert("Please file the foem with correct details")
+      
+      this.dataservice.postProjectData(this.projectForm.value).subscribe
+        ((res) => {
+          console.log("temp : ", res);
+          let temp= JSON.parse(res)   
+          this.store.dispatch(saveProject({ projects: temp}));
+          this.projectForm.reset()
+        })
+    } else {
+      alert("Please file the form with correct details")
     }
   }
   onReset() {

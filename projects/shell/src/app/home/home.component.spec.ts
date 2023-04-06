@@ -6,7 +6,8 @@ import { employeesReducer, EmployeeState, projectReducer, ProjectState,
   saveEmployee,
   Employee,
   saveProject,
-  projectSelector} from 'datastore';
+  projectSelector,
+  updateEmployee} from 'datastore';
 import { Store, provideStore } from '@ngrx/store';
 import { Observable, of } from 'rxjs';
 import { HomeComponent } from './home.component';
@@ -14,6 +15,8 @@ import { AppState, employees } from 'projects/datastore/src/lib/app.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
+import { TestScheduler } from 'rxjs/testing';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -22,7 +25,8 @@ describe('HomeComponent', () => {
   let service: DatastoreService;
   let httpMock: HttpTestingController;
   let actualData : any=[];
-
+  let scheduler: TestScheduler;
+  let len =0;
   const empMockData ={
     allEmployees: [
       { "empId" : "ACE10252", "first_name" : "Prema", "last_name" : "Palanisamy", "emailID" : "Prema@gmail.com  ",
@@ -82,6 +86,12 @@ const initialState: EmployeeState = {
     fixture.detectChanges();
   });
 
+  beforeEach(() => {
+    scheduler = new TestScheduler((actual, expected) => {
+      expect(actual).toEqual(expected);
+    });
+    // component = new HomeComponent();
+  });
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -119,57 +129,97 @@ const initialState: EmployeeState = {
     });
     expect(actualData).toEqual(expectedData);
 
-  
-//   const table = fixture.nativeElement.querySelector('table.margin-class1');
-//   const emp$ = of(actualData);
-
-//   component.employees$= emp$;
-
-//   fixture.detectChanges();
-// console.log("ssss : ",  component.employees$);
-   
-//   const rows = table.rows;
-//   console.log("rows length : ", table, table.rows)
-//   expect(rows.length).toBe(3);
-  //   console.log("rows length : ", tableRows.length, expectedData.length);
-    
-  //   let headerRow = tableRows[0];
-  //     expect(headerRow.cells[0].innerHTML).toBe('empId');
-  //     expect(headerRow.cells[1].innerHTML).toBe('first_name');
-  //     expect(headerRow.cells[2].innerHTML).toBe('last_name');
-
-  //     // Data rows
-  //     let row1 = tableRows[1];
-  //     expect(row1.cells[0].innerHTML).toBe('ACE1100');
-  //     expect(row1.cells[1].innerHTML).toBe('Makanth');
-  //     expect(row1.cells[2].innerHTML).toBe('Senthilkumar');
-
-  //   expect(tableRows.length).toBe(2);
   });
 
-  it('should select Project data from the store', () => {
-    let expectedData = [
-       { projectId : "p1234", project_name : "f2b", description : "farm2bag"},
-       { projectId : "p1235", project_name : "Supplier Portal", description : "Supplier Portal"},
-       { projectId : "p1236", project_name : "KP", description : "Keerthi Pumps"},
-     ];
-     const expectedData1 =  { projectId : "p1234", project_name : "f2b", description : "farm2bag"}
-     const expectedData2 = { projectId : "p1235", project_name : "Supplier Portal", description : "Supplier Portal"}
-     const expectedData3 = { projectId : "p1236", project_name : "KP", description : "Keerthi Pumps"}
- 
-     store.dispatch(saveProject({projects: expectedData1}));
-     store.dispatch(saveProject({projects: expectedData2}));
-     store.dispatch(saveProject({projects: expectedData3}));
-     let actualData : any=[];
-     store.select(projectSelector).subscribe(data => {
-       actualData = data;
-     });
-     console.log("dddddd : ", actualData);
-     console.log("expectedData", expectedData);
-     expect(actualData).toEqual(expectedData);
-     // expect(store.dispatch).toHaveBeenCalledWith(getData());
-   });
 
-   
-  
+  it('should emit the selected item when the select box is changed', () => {
+    
+    // const spy = spyOn(component.selectedProject, 'selectedProject');
+    const emp : Employee[] = [
+      { "empId" : "ACE10252", "first_name" : "Prema", "last_name" : "Palanisamy", "emailID" : "Prema@gmail.com  ",
+      "mobile" : 9865433214, "address" : "Omr, Chennai", "Active" : true, "projectId":""},
+    { "empId" : "ACE101025", "first_name" : "Ram", "last_name" : "Santhanam", "emailID" : "ram@gmail.com  ",
+      "mobile" : 9876524212, "address" : "PA, USA", "Active" : true, "projectId":""},
+    { "empId" : "ACE9876", "first_name" : "Thithika", "last_name" : "Senthilkumar", "emailID" : "thithika@gmail.com  ",
+      "mobile" : 9999999999, "address" : "Omr, Chennai", "Active" : true, "projectId":""},
+    { "empId" : "ACE1100", "first_name" : "Makanth", "last_name" : "Senthilkumar", "emailID" : "makanth@gmail.com  ",
+      "mobile" : 7777777777, "address" : "Medavakkam, Chennai", "Active" : true, "projectId":""}
+    ]
+    const row ={
+       "empId" : "ACE1100", "first_name" : "Makanth", "last_name" : "Senthilkumar", "emailID" : "makanth@gmail.com  ",
+      "mobile" : 7777777777, "address" : "Medavakkam, Chennai", "Active" : true, "projectId":""
+    }
+    // select.value = '3';
+    // const select = fixture.debugElement.query(By.css('select')).nativeElement;
+    // select.dispatchEvent(new Event('change'));
+    let temp=of(emp) 
+    component.employees$ = temp
+    component.selectedProject('P12345', row, 3,)
+    // expect(spy).toHaveBeenCalledWith(component.list[1]);
+    let updateData = { row : row, index: 3, projectId:'P12345'}
+      const expectedAction = updateEmployee({ employees: updateData });
+      // expect(service.postProjectData).toHaveBeenCalledWith({employees: emp});
+      spyOn(store, 'dispatch');
+      // store.dispatch(saveProject({ projects: component.projectForm.value }));
+      store.dispatch(updateEmployee({employees : updateData}));
+      expect(store.dispatch).toHaveBeenCalledWith(expectedAction)
+  });
+
+  // it('should dispatch an updateEmployee action and update the employee list', () => {
+  //   const event = { target: { value: "P12345" } };
+  //   const row = { empId : "ACE10252",
+  //   first_name : "Prema",
+  //   last_name : "Palanisamy",
+  //   emailID: "Prema@gmail.com",
+  //   mobile : 9865433214,
+  //   address : "Omr, Chennai",
+  //   Active : true,
+  //   projectId: '' };
+  //   const i = 0;
+  //   component.selectedProject(event, row, i);
+
+  //   // expect(store.dispatch).toHaveBeenCalledWith(updateEmployee({ employees: { row: row, index: i, projectId: event.target.value } }));
+  //   // expect(store.select).toHaveBeenCalledWith(employeesSelector);
+  //   // expect(component.listOfEmployee).toEqual([{ id: 1, name: 'Alice', projectId: 1 }, { id: 2, name: 'Bob', projectId: 2 }]);
+  //   // expect(component.len).toBe(2);
+
+  //   component.onSubmit();
+  //   const expectedAction = saveProject({ projects: JSON.parse('{"projectId" : "P1234","project_name" : "f2b","description" : "FARM 2 BAG"}') });
+  //   expect(service.postProjectData).toHaveBeenCalledWith(component.projectForm.value);
+  //   spyOn(store, 'dispatch');
+  //   store.dispatch(saveProject({ projects: component.projectForm.value }));
+  //   expect(store.dispatch).toHaveBeenCalledWith(expectedAction)
+  // });
+
+  it('should filter employees based on search term', () => {
+    scheduler.run(({ cold, expectObservable }) => {
+      const employeesList = [
+        { empId: '1', first_name: 'John', last_name: 'Doe', emailID: 'john.doe@example.com', address: '123 Main St', mobile: 1234567890, Active: true, projectId:'P12' },
+        { empId: '2', first_name: 'Jane', last_name: 'Doe', emailID: 'jane.doe@example.com', address: '456 Elm St', mobile: 9987654321, Active: false , projectId:'P13'}
+      ];
+      component.employeesList = employeesList;
+
+      const searchTerm = 'john';
+      const expectedEmployees = [
+        { empId: '1', first_name: 'John', last_name: 'Doe', emailID: 'john.doe@example.com', address: '123 Main St', mobile: 1234567890, Active: true }
+      ];
+
+      component.filter.setValue(searchTerm);
+
+      const filter$ = of(component.filter.value);
+      const result$ = component.filteredEmployee$;
+
+      const expected$ = cold('1000ms (a|)', { a: expectedEmployees });
+
+      // expectObservable(result$).toBeObservable(expected$);
+    });
+  });
+
+  it('should show "Welcome!" when len is 0', () => {
+    component.len = 0;
+    fixture.detectChanges(); // trigger change detection
+    const welcomeElement = fixture.nativeElement.querySelector('h1');
+    expect(welcomeElement.textContent).toContain('Welcome!');
+  });
+ 
 });

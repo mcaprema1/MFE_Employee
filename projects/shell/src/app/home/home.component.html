@@ -3,18 +3,18 @@
 <div *ngIf="len>0">
 
   <h2 style="text-align: center;">Map Projects with Employees</h2>
-<table style="width:50%;margin-left: 250px;" class="margin-class1;">
+<table style="width:50%;margin-left: 250px;" class="margin-class;">
   <thead>
       <tr>
-    <th> Project Id </th>
-    <th> Project Name</th>
+    <th> Employee Id </th>
+    <th> Employee Name</th>
   </tr>
 </thead>
 <tbody>
-  <ng-container *ngIf="employees$ | async">
-  <tr *ngFor="let opt of filteredEmployee$ | async; let i=index;" >
+  <!-- <ng-container *ngIf="employees$ | async"> -->
+  <tr *ngFor="let op of employees$ | async; let i=index;" >
     <td > 
-      {{opt.empId}}
+      {{op.empId}}
     </td> 
     <td>  
 
@@ -23,14 +23,14 @@
       </div>
 
       <div *ngIf="len1>0">
-      <select name="projectInput" (change)="selectedProject($event, opt, i )">
+      <select name="projectInput{{i}}" (change)="selectedProject($event, op, i)">
         <option *ngFor="let opt of projects$| async" [value]="opt.projectId">{{opt.project_name}}</option>
       </select>  
     </div>
     </td>
   </tr>
-</ng-container>
 </tbody>
+<!-- </ng-container> -->
 </table>
 
 <h2 class="text-center">List of Employees</h2> 
@@ -51,9 +51,6 @@
 
 
 <table class="table table-striped margin-class" >
-  <thead>
-
-  
   <tr>
     <th> Emp Id </th>
     <th> First name </th>
@@ -64,8 +61,6 @@
     <th> Active</th>
     <th> Project ID</th>
   </tr>
-</thead>
-<tbody>
   <!-- <ng-container *ngIf="employees$ | async"> -->
     <tr *ngFor="let d of this.filteredEmployee$  | async; let i = index">
       <td> {{d.empId}}</td>
@@ -78,8 +73,6 @@
       <td>{{d.projectId}}</td>
     </tr>
 <!-- </ng-container> -->
-</tbody>
-
 </table>
 
 

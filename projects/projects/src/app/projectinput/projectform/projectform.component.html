@@ -1,7 +1,7 @@
 <div class="card m-3">
     <h2 class="card-header text-center">Projects Details</h2>
     <div class="card-body">
-      <form [formGroup]="projectForm" (ngSubmit)="onSubmit()">
+      <form [formGroup]="projectForm" >
         <div class="form-horizontal">
           <div class="form-group">
             <label class="control-label col-sm-2" for="projectId">Project Id</label>
@@ -34,7 +34,7 @@
         </div>
         </div>
         <div class="text-center">
-          <button class="btn btn-primary mr-1">Submit</button>
+          <button class="btn btn-primary mr-1" type="submit" (click)="onSubmit()" >Submit</button>
           <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
         </div>
       </form>

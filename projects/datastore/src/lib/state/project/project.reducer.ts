@@ -20,10 +20,10 @@ export const projectReducer = createReducer(
     ...state,
     // allProjects: projects,
   })),
-  on(saveProject, (state, { projects }) => ({
-    ...state, allProjects: [...state.allProjects, projects],
-  }) ),
-
+  on(saveProject, (state, { projects }) => {
+    alert("Data has been saved in Store")
+    return {...state, allProjects: [...state.allProjects, projects]}
+  }),
   on(updateProject, state => ({
     ...state,
   }))

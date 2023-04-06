@@ -1,54 +1,14 @@
-
-<!-- <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-   <label for="name">Name:</label>
-  <input type="text" id="name" formControlName="name">
-  
-  <div *ngIf="myForm.get('name').errors && myForm.get('name').touched">
-    <div *ngIf="myForm.get('name').errors.required">Name is required</div>
-    <div *ngIf="myForm.get('name').errors.minlength">Name must be at least 3 characters</div>
-  </div> 
-  <div class="form-horizontal">
-    <div class="form-group">
-      <label class="control-label col-sm-2" >First Name</label>
-      <div class="col-sm-10">
-        <input type="text" formControlName="first_name"
-         id="first_name"/>
-        <div *ngIf="myForm.get('first_name').errors && myForm.get('first_name').touched">
-          <div *ngIf="myForm.get('first_name').errors.required">First Name is required</div>
-          <div *ngIf="myForm.get('first_name').errors.minlength">Minimum 3 characters is required</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  
-  <label for="email">Email:</label>
-  <input type="email" id="email" formControlName="email">
-  <div *ngIf="myForm.get('email').errors && myForm.get('email').touched">
-    <div *ngIf="myForm.get('email').errors.required">Email is required</div>
-    <div *ngIf="myForm.get('email').errors.email">Email must be a valid email address</div>
-  </div>
-  
-  <label for="password">Password:</label>
-  <input type="password" id="password" formControlName="password">
-  <div *ngIf="myForm.get('password').errors && myForm.get('password').touched">
-    <div *ngIf="myForm.get('password').errors.required">Password is required</div>
-    <div *ngIf="myForm.get('password').errors.minlength">Password must be at least 8 characters</div>
-  </div>
-  
-  <button type="submit">Submit</button>
-</form> -->
-
 <div class="card m-3">
   <h2 class="card-header text-center">Employee Details</h2>
   <div class="card-body">
-    <form  [formGroup]="registerForm" (ngSubmit)="onSubmit()" id="registerForm">
+    <form  [formGroup]="registerForm" id="registerForm">
       <div class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-sm-2">Employee Id</label>
-          <div class="col-sm-10">
-            <input type="text" formControlName="empId" id="empId" class="form-control"/>
-            <div class="error-msg" id="error-msg" *ngIf="registerForm.get('empId').errors && registerForm.get('empId').touched">
-              <div *ngIf="registerForm.get('empId').errors.required">Employee ID is required</div>
+          <div class="col-sm-10" id="subject">
+            <input type="text" formControlName="empId" id="outer" class="form-control"/>
+            <div class="error-msg" id="inner" *ngIf="registerForm.get('empId').errors && registerForm.get('empId').touched">
+              <div id="innermost" *ngIf="registerForm.get('empId').errors.required">Employee ID is required</div>
             </div>
           </div>
         </div>
@@ -57,7 +17,7 @@
       <div class="form-horizontal">
         <div class="form-group">
           <label class="control-label col-sm-2" >First Name</label>
-          <div class="col-sm-10">
+          <div class="col-sm-10" id="m1">
             <input type="text" formControlName="first_name" class="form-control"
              id="first_name"/>
             <div class="error-msg" id="minlength" *ngIf="registerForm.get('first_name').errors  && registerForm.get('first_name').touched "  >
@@ -123,114 +83,10 @@
           </div>
       </div>
       <div class="text-center">
-        <button class="btn btn-primary mr-1" >Submit</button>
+        <button class="btn btn-primary mr-1" type="submit" (click)="onSubmit()">Submit</button>
         <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
       </div>
     </form>
   </div>
 </div>
 
-<!-- <button class="btn btn-primary mr-1"(click)="view()">view Store</button> -->
-
-
-
-
-
-<!-- 
-<div class="card m-3">
-  <h2 class="card-header text-center">Employede Details</h2>
-  <div class="card-body">
-    <form  [formGroup]="registerForm" (ngSubmit)="onSubmit()" id="registerForm">
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label class="control-label col-sm-2">Employee Id</label>
-          <div class="col-sm-10">
-            <input type="text" formControlName="empId" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f['empId'].errors }" id="empId"/>
-            <div *ngIf="submitted && f['empId'].errors" class="invalid-feedback">
-              <div *ngIf="f['empId'].errors['required']">First Name is required</div>
-              <div *ngIf="f['empId'].errors['minlength']">Minimum 3 characters is required</div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label class="control-label col-sm-2" >First Name</label>
-          <div class="col-sm-10">
-            <input type="text" formControlName="first_name" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f['first_name'].errors }" id="first_name"/>
-            <div *ngIf="submitted && f['first_name'].errors" class="invalid-feedback">
-              <div *ngIf="f['first_name'].errors['required']">First Name is required</div>
-              <div *ngIf="f['first_name'].errors['minlength']">Minimum 3 characters is required</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-horizontal">
-        <div class="form-group ">
-          <label class="control-label col-sm-2" >Last Name</label>
-          <div class="col-sm-10">
-            <input type="text" formControlName="last_name" class="form-control"
-              [ngClass]="{ 'is-invalid': submitted && f['last_name'].errors }" id="last_name"/>
-            <div *ngIf="submitted && f['last_name'].errors" class="invalid-feedback">
-              <div *ngIf="f['last_name'].errors['required']">Last Name is required</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="form-horizontal">
-      <div class="form-group">
-        <label class="control-label col-sm-2" >Email</label>
-        <div class="col-sm-10">
-                  <input type="text" formControlName="emailID" class="form-control"
-          [ngClass]="{ 'is-invalid': submitted && f['emailID'].errors }" />
-        <div *ngIf="submitted && f['emailID'].errors" class="invalid-feedback" id="emailId">
-          <div *ngIf="f['emailID'].errors['required']">Email is required</div>
-          <div *ngIf="f['emailID'].errors['email']">Email must be a valid</div>
-        </div>
-      </div>
-      </div>
-      </div>
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label class="control-label col-sm-2" for="mobile">Mobile</label>
-          <div class="col-sm-10">
-          <input type="number" formControlName="mobile" class="form-control"
-            [ngClass]="{ 'is-invalid': submitted && f['mobile'].errors }" />
-          <div *ngIf="submitted && f.mobile.errors" class="invalid-feedback">
-            <div *ngIf="f['mobile'].errors['required']">Mobile is required</div>
-            <div *ngIf="f['mobile'].errors['pattern']">Mobile Number must be 10 digits</div>
-          </div>
-        </div>
-      </div>
-      </div>
-      <div class="form-horizontal">
-        <div class="form-group">
-          <label class="control-label col-sm-2">Address</label>
-          <div class="col-sm-10">
-            <textarea type="text" formControlName="address" class="form-control"></textarea>
-          </div>
-        </div>
-      </div>
-      <div class="form-horizontal">
-          <div class="form-group">
-            <label class="form-check-label col-sm-2" style=" text-align: right;" for="flexSwitchCheckChecked">Active</label>
-            <div class="col-sm-10">
-                <div class="form-check form-switch">
-                  <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                  formControlName="Active" checked="true">
-                </div>
-            </div>
-          </div>
-      </div>
-      <div class="text-center">
-        <button class="btn btn-primary mr-1">Submit {{this.submitted}}</button>
-        <button class="btn btn-secondary" type="reset" (click)="onReset()">Cancel</button>
-      </div>
-    </form>
-  </div>
-</div>
-
- -->

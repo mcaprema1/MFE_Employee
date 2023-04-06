@@ -5,9 +5,10 @@ import { StoreModule } from '@ngrx/store';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HomeComponent } from './home/home.component';
-import { employeesReducer, projectReducer} from 'datastore';
+import { DatastoreService, employeesReducer, projectReducer} from 'datastore';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 @NgModule({
   declarations: [
     AppComponent,
@@ -18,6 +19,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     AppRoutingModule,
     FormsModule,
     ReactiveFormsModule,
+    HttpClientModule,
     StoreModule.forRoot(
       { employees: employeesReducer,  projects : projectReducer },
       {}),
@@ -26,7 +28,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
         // logOnly: environment.production,
        } )
   ],
-  providers: [],
+  providers: [DatastoreService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -28,26 +28,20 @@ export class EmployeeformComponent {
       emailID: ['', [Validators.required, Validators.email]],
       mobile: ['', [Validators.required, Validators.pattern("[0-9 ]{10}")]],
       address: [''],
-      Active: [true]
+      Active: [true],
+      projectId :['']
     });
   }
 
   onSubmit() {
     if (this.registerForm.valid) {
-    const requestOptions: Object = {
-      responseType: 'text',
-      'Content-Type': 'application/json'
-    }
-
     this.dataservice.postData(this.registerForm.value).subscribe
-    ({
-      next: (res) => {
-        let temp = JSON.parse(res)
+    ((res) => {
+      // console.log("response  : ", res);
+        let temp=JSON.parse(res)
         this.store.dispatch(saveEmployee({ employees: temp }));
-        this.onReset()
-      },
-      error: (err) => console.log("err : ", err)
-    })
+        this.registerForm.reset()
+     })
   }
   else{
     alert("Please fill form with correct details")
@@ -55,9 +49,6 @@ export class EmployeeformComponent {
   }
 
   onReset() {
-    // this.submitted = false;
     this.registerForm.reset();
   }
-
-  
 }

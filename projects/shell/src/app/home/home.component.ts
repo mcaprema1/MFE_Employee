@@ -1,4 +1,4 @@
-import { Component, ViewChild, ElementRef, PipeTransform } from '@angular/core';
+import { Component, ViewChild, ElementRef, PipeTransform, ChangeDetectorRef } from '@angular/core';
 import { HttpClient, HttpParams  } from '@angular/common/http';
 import { debounceTime, map, distinctUntilChanged, filter, startWith,
    switchMap, tap, delay } from "rxjs/operators";
@@ -23,8 +23,8 @@ export class HomeComponent {
   public fullList : any
   full : any =[];
   employeesList : Employee[] =[];
-  employees$ :  Observable<Employee[]> | undefined
-  projects$ :  Observable<Project[]> | undefined
+  employees$ :  Observable<Employee[]> | any
+  projects$ :  Observable<Project[]> | any
   filteredEmployee$ : Observable<Employee[]> | undefined;
   filter = new FormControl("");
   categories$!: Observable<Employee[]>;
@@ -33,19 +33,16 @@ export class HomeComponent {
   public projectInput =''
 
   Employeelist$:Observable<Employee[]> | any;
-  constructor(private store: Store, pipe : DecimalPipe) {
-    // this.employeesList =[];
+  constructor(private store: Store, pipe : DecimalPipe, private cf : ChangeDetectorRef) {
     this.employees$ = this.store.select(employeesSelector);
     this.projects$ = this.store.select(projectSelector);
     this.store.select(employeesSelector).subscribe(data =>{
       this.employeesList = data
       this.len = data.length
-      // console.log("length : ", data.length, this.listOfEmployee);
     })
     this.store.select(projectSelector).subscribe(data =>{
       this.listOfProject = data
       this.len1 = data.length
-      // console.log("project length : ", data.length, this.listOfProject );
     })
     this.filteredEmployee$ = this.filter.valueChanges.pipe(
       startWith(""),
@@ -56,17 +53,15 @@ export class HomeComponent {
         return this.search(text1, pipe);
       })
     );
-    // console.log("jjj:", this.employees$, this.filteredEmployee$);
-    // this.empStores = store.select('empStore');
+
   }
   
   ngOnInit() {
-    // this.Employeelist$ = this.store.pipe(select(selectEmployees));
+    // this.employees$.subscribe(data => console.log("employees$ : ", data))
+    
   }
-
   
 search(text: string, pipe: PipeTransform) {
-  // console.log("inn search call", text)
   let temp = this.employeesList.filter(list  => {
     // console.log("fff : ", list)
     const term = text.toLowerCase();
@@ -78,22 +73,23 @@ search(text: string, pipe: PipeTransform) {
       list.address.toLowerCase().includes(term) ||
       list.mobile.toString().includes(term) ||
       String(list.Active) === term
-      // list.Active.filter(item => Boolean(item)) ||
-      // list.Active.valueOf()? String(list.Active).includes('true') : String(list.Active).includes('false')  ||
       // pipe.transform(list.mobile).includes(term)
     );
   });
-  console.log("temo : ", temp);
-  
 return temp
 }
 
-selectedProject(event : any, row : any, i : number){
-  let updateData = { row : row, index: i, projectId:event.target.value }
+selectedProject( projectInput : any, row : any, i : number){
+  console.log("pi ", projectInput, projectInput.target.value );
+  console.log("dfdf ", projectInput, i, row);
+  
+  let updateData = { row : row, index: i, projectId:projectInput.target.value }
   this.store.dispatch(updateEmployee({employees : updateData}));
-  this.store.select(employeesSelector).subscribe(data =>{
-    this.listOfEmployee = data
-    this.len = data.length
-  })
+  this.employees$ = this.store.select(employeesSelector);
+  this.cf.detectChanges()
 }
+// this.store.select(employeesSelector).subscribe(data =>{
+  //   this.listOfEmployee = data
+  //   this.len = data.length
+  // })
 }

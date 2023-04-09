@@ -62,7 +62,7 @@ export class HomeComponent {
 search(text: string) {
   let temp = this.employeesList.filter(list  => {    
     const term = text.toLowerCase();
-    // console.log("fff : ", term, list)
+    console.log("fff : ", term, list)
     return (
       list.empId.toLowerCase().includes(term) ||
       list.first_name.toLowerCase().includes(term) ||

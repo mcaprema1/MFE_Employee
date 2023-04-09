@@ -14,7 +14,7 @@ import { HomeComponent } from './home.component';
 import { AppState, employees } from 'projects/datastore/src/lib/app.interface';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { By } from '@angular/platform-browser';
 import { TestScheduler } from 'rxjs/testing';
 
@@ -27,6 +27,7 @@ describe('HomeComponent', () => {
   let actualData : any=[];
   let scheduler: TestScheduler;
   let len =0;
+  let filter = new FormControl();
   const empMockData ={
     allEmployees: [
       { "empId" : "ACE10252", "first_name" : "Prema", "last_name" : "Palanisamy", "emailID" : "Prema@gmail.com  ",
@@ -154,13 +155,11 @@ const initialState: EmployeeState = {
     // select.dispatchEvent(new Event('change'));
     let temp=of(emp) 
     component.employees$ = temp
-    component.selectedProject('P12345', row, 3,)
-    // expect(spy).toHaveBeenCalledWith(component.list[1]);
-    let updateData = { row : row, index: 3, projectId:'P12345'}
+    let empid= { target: { value: 'P12345' } };
+    // component.selectedProject('P12345', row, 3,)
+    let updateData = { row : row, index: 3, projectId: empid}
       const expectedAction = updateEmployee({ employees: updateData });
-      // expect(service.postProjectData).toHaveBeenCalledWith({employees: emp});
       spyOn(store, 'dispatch');
-      // store.dispatch(saveProject({ projects: component.projectForm.value }));
       store.dispatch(updateEmployee({employees : updateData}));
       expect(store.dispatch).toHaveBeenCalledWith(expectedAction)
   });
@@ -207,7 +206,7 @@ const initialState: EmployeeState = {
       component.filter.setValue(searchTerm);
 
       const filter$ = of(component.filter.value);
-      const result$ = component.filteredEmployee$;
+      // const result$ = component.filteredEmployee$;
 
       const expected$ = cold('1000ms (a|)', { a: expectedEmployees });
 
@@ -220,6 +219,38 @@ const initialState: EmployeeState = {
     fixture.detectChanges(); // trigger change detection
     const welcomeElement = fixture.nativeElement.querySelector('h1');
     expect(welcomeElement.textContent).toContain('Welcome!');
+  });
+
+  // it('should bind the form control', () => {
+  //   const input = fixture.debugElement.query(By.css('.form-control.ml-2'));
+  //   console.log("ffffff : ", input);
+    
+  //   expect(input.nativeElement.value).toBe('');
+  //   component.filter.setValue('test');
+  //   fixture.detectChanges();
+  //   expect(input.nativeElement.value).toBe('test');
+  // });
+
+  it('should dispatch updateEmployee action', () => {
+    spyOn(store, 'dispatch');
+    const row = {};
+    const index = 0;
+    const event = { target: { value: 1 } };
+    const updateData = { row, index, projectId: event.target.value };
+    const expectedAction = updateEmployee({ employees: updateData });
+    component.selectedProject(event, row, index);
+    expect(store.dispatch).toHaveBeenCalledWith(expectedAction);
+  });
+
+  it('should update filteredEmployees$', () => {
+    const filter = new FormControl('');
+    const searchSpy = spyOn(component, 'search');
+    component.selectedProject({ target: { value: 1 } }, {}, 0);
+    expect(component.filteredEmployees$).toBeDefined();
+    expect(searchSpy).toHaveBeenCalledWith('');
+    filter.setValue('test');
+    fixture.detectChanges();
+    expect(searchSpy).toHaveBeenCalledWith('test');
   });
  
 });

@@ -29,10 +29,8 @@ export class ProjectformComponent {
   }
   onSubmit() {
     if (this.projectForm.valid) {
-      
       this.dataservice.postProjectData(this.projectForm.value).subscribe
         ((res) => {
-          console.log("temp : ", res);
           let temp= JSON.parse(res)   
           this.store.dispatch(saveProject({ projects: temp}));
           this.projectForm.reset()

@@ -7,14 +7,14 @@
   <thead>
       <tr>
     <th> Employee Id </th>
-    <th> Employee Name</th>
+    <th> ProjectId Name</th>
   </tr>
 </thead>
 <tbody>
   <!-- <ng-container *ngIf="employees$ | async"> -->
   <tr *ngFor="let op of employees$ | async; let i=index;" >
-    <td > 
-      {{op.empId}}
+    <td >               
+      {{op.empId}} - {{op.first_name}}
     </td> 
     <td>  
 
@@ -23,14 +23,15 @@
       </div>
 
       <div *ngIf="len1>0">
-      <select name="projectInput{{i}}" (change)="selectedProject($event, op, i)">
-        <option *ngFor="let opt of projects$| async" [value]="opt.projectId">{{opt.project_name}}</option>
+      <select name="projectId"[(ngModel)]="op.projectId" (change)="selectedProject($event, op, i)">
+        <option value="none">Select Project</option>
+        <option *ngFor="let opt of projects$| async" [value]="opt.projectId">{{opt.projectId}}</option>
       </select>  
     </div>
     </td>
   </tr>
-</tbody>
 <!-- </ng-container> -->
+</tbody>
 </table>
 
 <h2 class="text-center">List of Employees</h2> 
@@ -38,19 +39,14 @@
   <div style="display:flex;">
   <div class="form-group form-inline" >
     Search:
-    <input class="form-control ml-2" type="text" [formControl]="filter" />
+    <input type='text' id="search" class="form-control ml-2" type="text" [formControl]="filter" />
+    <!-- <input type="text" placeholder="Search employee" (input)="search.next(($event.target as HTMLInputElement)?.value)"> -->
+    <!-- <input type="text" placeholder="Search employee" (input)="search.next(($event.target as HTMLInputElement).value);"> -->
+
   </div>
-  <!-- <div>
-     <h2>List of Employees</h2> 
-  </div> -->
 </div>
 </form>
-
-
-
-
-
-<table class="table table-striped margin-class" >
+<table class="table table-striped margin-class" #myTable>
   <tr>
     <th> Emp Id </th>
     <th> First name </th>
@@ -62,7 +58,7 @@
     <th> Project ID</th>
   </tr>
   <!-- <ng-container *ngIf="employees$ | async"> -->
-    <tr *ngFor="let d of this.filteredEmployee$  | async; let i = index">
+    <tr *ngFor="let d of this.filteredEmployees$  | async; let i = index">
       <td> {{d.empId}}</td>
       <td> {{d.first_name}}</td>
       <td> {{d.last_name}} </td>

@@ -35,12 +35,13 @@ export class EmployeeformComponent {
 
   onSubmit() {
     if (this.registerForm.valid) {
+      this.registerForm.Active=this.registerForm.Active? this.registerForm.Active : false;
     this.dataservice.postData(this.registerForm.value).subscribe
     ((res) => {
-      // console.log("response  : ", res);
         let temp=JSON.parse(res)
         this.store.dispatch(saveEmployee({ employees: temp }));
         this.registerForm.reset()
+        
      })
   }
   else{

@@ -308,48 +308,86 @@ describe('EmployeeformComponent', () => {
     });
   });
 
+  // it('should save employee data via post', () => {
+  //   spyOn(service, 'postData').and.returnValue(of({
+  //     "empId" : "ACE10252",
+  //     "first_name" : "Prema",
+  //     "last_name" : "Palanisamy",
+  //     "emailID" : "Prema@gmail.com  ",
+  //     "mobile" : 9865433214,
+  //     "address" : "Omr, Chennai",
+  //     "Active" : true,
+  //     "projectId":""
+  //   }));
+    
+  //   component.registerForm.setValue({
+  //     empId : "ACE10252",
+  //     first_name : "Prema",
+  //     last_name : "Palanisamy",
+  //     emailID: "Prema@gmail.com  ",
+  //     mobile : 9865433214,
+  //     address : "Omr, Chennai",
+  //     Active : true,
+  //     projectId: ''
+  //   });
+  //   component.onSubmit();
+  //   const expectedAction = saveEmployee(
+  //     { employees: JSON.parse
+  //       ('{"empId" : "ACE10252","first_name" : "Prema", "last_name" : "Palanisamy","emailID" : "Prema@gmail.com  ","mobile" : 9865433214, "address" : "Omr, Chennai", "Active" : true, "projectId":""}') })
+    
+  //   // expect(service.postData).toHaveBeenCalledWith(component.registerForm.value);
+  //   spyOn(store, 'dispatch');
+  //   store.dispatch(saveEmployee({ employees: component.registerForm.value }));
+  //   expect(store.dispatch).toHaveBeenCalledWith(expectedAction)
+  //   // spyOn(component, 'onReset');
+  //   // expect(component.registerForm.value).toEqual({
+  //   //   empId : '',
+  //   //   first_name : '',
+  //   //   last_name : '',
+  //   //   emailID : '',
+  //   //   mobile : '',
+  //   //   address : '',
+  //   //   Active : '',
+  //   //   projectId:''
+  //   // });
+  // });
+
   it('should save employee data via post', () => {
-    spyOn(service, 'postData').and.returnValue(of({
-      "empId" : "ACE10252",
-      "first_name" : "Prema",
-      "last_name" : "Palanisamy",
-      "emailID" : "Prema@gmail.com  ",
-      "mobile" : 9865433214,
-      "address" : "Omr, Chennai",
-      "Active" : true,
-      "projectId":""
-    }));
-    
+    const postProjectDataSpy = spyOn(service, 'postData').and.callThrough();
     component.registerForm.setValue({
-      empId : "ACE10252",
-      first_name : "Prema",
-      last_name : "Palanisamy",
-      emailID: "Prema@gmail.com  ",
-      mobile : 9865433214,
-      address : "Omr, Chennai",
-      Active : true,
-      projectId: ''
+          empId : "ACE10252",
+          first_name : "Prema",
+          last_name : "Palanisamy",
+          emailID: "Prema@gmail.com",
+          mobile : 9865433214,
+          address : "Omr, Chennai",
+          Active : true,
+          projectId: ''
     });
-    component.onSubmit();
-    const expectedAction = saveEmployee(
-      { employees: JSON.parse
-        ('{"empId" : "ACE10252","first_name" : "Prema", "last_name" : "Palanisamy","emailID" : "Prema@gmail.com  ","mobile" : 9865433214, "address" : "Omr, Chennai", "Active" : true, "projectId":""}') })
     
-    // expect(service.postData).toHaveBeenCalledWith(component.registerForm.value);
+    expect(component.registerForm.valid).toBeTruthy();
+    const submitButton = fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
+    submitButton.click();
+
+    expect(postProjectDataSpy).toHaveBeenCalledOnceWith({
+          empId : "ACE10252",
+          first_name : "Prema",
+          last_name : "Palanisamy",
+          emailID: "Prema@gmail.com",
+          mobile : 9865433214,
+          address : "Omr, Chennai",
+          Active : true,
+          projectId: ''
+    });
+     
+    const req = httpMock.expectOne('https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/employee/save');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(component.registerForm.value);
+    
+    const expectedAction = saveEmployee({ employees:{"empId" : "ACE10252","first_name" : "Prema", "last_name" : "Palanisamy","emailID" : "Prema@gmail.com","mobile" : 9865433214, "address" : "Omr, Chennai", "Active" : true, "projectId":""} })
     spyOn(store, 'dispatch');
     store.dispatch(saveEmployee({ employees: component.registerForm.value }));
     expect(store.dispatch).toHaveBeenCalledWith(expectedAction)
-    // spyOn(component, 'onReset');
-    // expect(component.registerForm.value).toEqual({
-    //   empId : '',
-    //   first_name : '',
-    //   last_name : '',
-    //   emailID : '',
-    //   mobile : '',
-    //   address : '',
-    //   Active : '',
-    //   projectId:''
-    // });
   });
 
   it('should generate alert if form is invalid', () => {
@@ -357,7 +395,7 @@ describe('EmployeeformComponent', () => {
       "empId" : "",
       "first_name" : "P",
       "last_name" : "Palanisamy",
-      "emailID" : "Prema@gmail.com  ",
+      "emailID" : "Prema@gmail.com",
       "mobile" : 9865433214,
       "address" : "Omr, Chennai",
       "Active" : true,
@@ -374,6 +412,30 @@ describe('EmployeeformComponent', () => {
     expect(window.alert).toHaveBeenCalledWith('Please fill form with correct details');
   });
 
+  it('should dispatch saveEmployee action when HTTP request is successful', () => {
+    const dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
+    // set up HTTP response
+    const response = {"empId" : "ACE10252","first_name" : "Prema", "last_name" : "Palanisamy","emailID" : "Prema@gmail.com","mobile" : 9865433214, "address" : "Omr, Chennai", "Active" : true, "projectId":""};
+    spyOn(service, 'postProjectData').and.returnValue(of(JSON.stringify(response)));
+  
+    component.registerForm.setValue({
+      empId : "ACE10252",
+      first_name : "Prema",
+      last_name : "Palanisamy",
+      emailID: "Prema@gmail.com",
+      mobile : 9865433214,
+      address : "Omr, Chennai",
+      Active : true,
+      projectId: ''
+    });
+
+    // trigger submit button click
+    const submitButton = fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
+    submitButton.click();
+  
+    // assert that dispatch() was called with saveProject action and HTTP response data
+    // expect(dispatchSpy).toHaveBeenCalledOnceWith(saveEmployee({ employees: response }));
+  });
   
 });
 

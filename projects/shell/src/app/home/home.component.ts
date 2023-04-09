@@ -6,9 +6,9 @@ import { DecimalPipe } from "@angular/common"
 import { Store , select} from '@ngrx/store';
 import { FormControl } from '@angular/forms';
 import { Employee, Project, employeesReducer, employeesSelector, getEmployees, projectSelector, updateEmployee, saveEmployee} from 'datastore'
-import { Observable } from 'rxjs';
+import { Observable, of , Subject} from 'rxjs';
 import { employees } from 'projects/datastore/src/lib/app.interface';
-
+import { NgxSpinnerService } from "ngx-spinner";
 
 @Component({
   selector: 'app-home',
@@ -25,48 +25,44 @@ export class HomeComponent {
   public fullList : any
   full : any =[];
   employeesList : Employee[] =[];
-  employees$ :  Observable<Employee[]> | any
+  employees$ :  Observable<Employee[]> | undefined
   projects$ :  Observable<Project[]> | any
-  filteredEmployee$ : Observable<Employee[]> | undefined;
+  filteredEmployees$: Observable<Employee[]>;
   filter = new FormControl("");
-  categories$!: Observable<Employee[]>;
   public len = 0;
   public len1 = 0;
   public projectInput ='';
-
-  Employeelist$:Observable<Employee[]> | any;
-  constructor(private store: Store, pipe : DecimalPipe, private cf : ChangeDetectorRef) {
-    this.employees$ = this.store.select(employeesSelector);
-    this.projects$ = this.store.select(projectSelector);
+  constructor(private store: Store, pipe : DecimalPipe, private cf : ChangeDetectorRef,
+    private spinner: NgxSpinnerService) {
     this.store.select(employeesSelector).subscribe(data =>{
+      let temp= of(data)
+      this.employees$  = temp
       this.employeesList = data
       this.len = data.length
-    })
+    });
+    this.projects$ = this.store.select(projectSelector);
     this.store.select(projectSelector).subscribe(data =>{
       this.listOfProject = data
       this.len1 = data.length
     })
-    this.filteredEmployee$ = this.filter.valueChanges.pipe(
+    this.filteredEmployees$ = this.filter.valueChanges.pipe(
       startWith(""),
       distinctUntilChanged(),
       debounceTime(1000),
       map(text => {
        let text1= text ? text : '';
-        return this.search(text1, pipe);
+        return this.search(text1);
       })
     );
-
   }
   
   ngOnInit() {
-    // this.employees$.subscribe(data => console.log("employees$ : ", data))
-    
   }
   
-search(text: string, pipe: PipeTransform) {
-  let temp = this.employeesList.filter(list  => {
-    // console.log("fff : ", list)
+search(text: string) {
+  let temp = this.employeesList.filter(list  => {    
     const term = text.toLowerCase();
+    // console.log("fff : ", term, list)
     return (
       list.empId.toLowerCase().includes(term) ||
       list.first_name.toLowerCase().includes(term) ||
@@ -78,17 +74,25 @@ search(text: string, pipe: PipeTransform) {
       // pipe.transform(list.mobile).includes(term)
     );
   });
+  
 return temp
 }
 
-selectedProject( projectInput : any, row : any, i : number){
-  let updateData = { row : row, index: i, projectId:projectInput.target.value }
+selectedProject( event : any, row : any, i : number){
+  let updateData = { row : row, index: i, projectId:event.target.value }
   this.store.dispatch(updateEmployee({employees : updateData}));
-  this.employees$ = this.store.select(employeesSelector);
-  this.cf.detectChanges()
+  // this.spinner.show();
+    this.filteredEmployees$= this.filter.valueChanges.pipe(
+      startWith(""),
+      distinctUntilChanged(),
+      debounceTime(1000),
+      map(text => {
+       let text1= text ? text : '';
+        return this.search(text1);
+      })
+    );
+    // this.spinner.hide();
 }
-// this.store.select(employeesSelector).subscribe(data =>{
-  //   this.listOfEmployee = data
-  //   this.len = data.length
-  // })
+
+
 }

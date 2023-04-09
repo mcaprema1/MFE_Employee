@@ -66,6 +66,7 @@ describe('ProjectformComponent', () => {
   afterEach(() => {
     httpMock.verify();
   });
+
   it('should create', () => {
     expect(component).toBeTruthy();
   });
@@ -140,25 +141,52 @@ describe('ProjectformComponent', () => {
     });
   });
 
-  it('should save project data via post', () => {
-    spyOn(service, 'postProjectData').and.returnValue(of({
-      "projectId": "P1234",
-      "project_name": "f2b",
-      "description": "FARM 2 BAG",
-    }));
+  it('should save employee data via post', () => {
+    const postProjectDataSpy = spyOn(service, 'postProjectData').and.callThrough();
     component.projectForm.setValue({
-      projectId: "P1234",
-      project_name: "f2b",
-      description: "FARM 2 BAG",
+      projectId : "P1234",
+      project_name : "F2B",
+      description : "FARM2BAG"
     });
-    component.onSubmit();
-    // const expectedAction = saveProject({ projects: JSON.parse('{"projectId" : "P1234","project_name" : "f2b","description" : "FARM 2 BAG"}') });
-    const expectedAction = saveProject({ projects: {"projectId" : "P1234","project_name" : "f2b","description" : "FARM 2 BAG"} });
-   
-    expect(service.postProjectData).toHaveBeenCalledWith(component.projectForm.value);
+    console.log("vvvvv: ", component.projectForm.value)
+    expect(component.projectForm.valid).toBeTruthy();
+    const submitButton = fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
+    submitButton.click();
+
+    expect(postProjectDataSpy).toHaveBeenCalledOnceWith({
+      projectId : "P1234",
+      project_name : "F2B",
+      description : "FARM2BAG"
+    });
+     
+    const req = httpMock.expectOne('https://09a89f92-edc2-46ae-8b50-65bf2d58fab9.mock.pstmn.io/project/save');
+    expect(req.request.method).toBe('POST');
+    expect(req.request.body).toEqual(component.projectForm.value);
+    
+    const expectedAction = saveProject({ projects:{"projectId" : "P1234", "project_name" : "F2B", "description" : "FARM2BAG"} })
     spyOn(store, 'dispatch');
     store.dispatch(saveProject({ projects: component.projectForm.value }));
     expect(store.dispatch).toHaveBeenCalledWith(expectedAction)
+  });
+
+  it('should dispatch saveProject action when HTTP request is successful', () => {
+    const dispatchSpy = spyOn(store, 'dispatch').and.callThrough();
+    // set up HTTP response
+    const response = { projectId: "P1234", project_name: 'F2B', description: 'FARM2BAG' };
+    spyOn(service, 'postProjectData').and.returnValue(of(JSON.stringify(response)));
+  
+    component.projectForm.setValue({
+      projectId : "P1234",
+      project_name : "F2B",
+      description : "FARM2BAG"
+    });
+
+    // trigger submit button click
+    const submitButton = fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
+    submitButton.click();
+  
+    // assert that dispatch() was called with saveProject action and HTTP response data
+    expect(dispatchSpy).toHaveBeenCalledOnceWith(saveProject({ projects: response }));
   });
 
   it('should generate alert if form is invalid', () => {

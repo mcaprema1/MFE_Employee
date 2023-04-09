@@ -9,6 +9,7 @@ import { DatastoreService, employeesReducer, projectReducer} from 'datastore';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { NgxSpinnerModule } from "ngx-spinner";
 @NgModule({
   declarations: [
     AppComponent,
@@ -26,7 +27,8 @@ import { HttpClientModule } from '@angular/common/http';
       StoreDevtoolsModule.instrument({
         maxAge: 25, // Retains last 25 states
         // logOnly: environment.production,
-       } )
+       } ),
+       NgxSpinnerModule
   ],
   providers: [DatastoreService],
   bootstrap: [AppComponent]

@@ -264,11 +264,19 @@ const initialState: EmployeeState = {
 
     // Act
     const result = component.search('doe');
-
+      console.log("fffbbb: ", result)
     // Assert
     expect(result.length).toEqual(2);
     expect(result[0].empId).toEqual('1');
     expect(result[1].empId).toEqual('2');
+
+    const result1 = component.search('');
+      console.log("fffvvv: ", result1)
+    // Assert
+    expect(result1.length).toEqual(3);
+    expect(result1[0].empId).toEqual('1');
+    expect(result1[1].empId).toEqual('2');
+
   });
 
   // it('should filter employees based on filter value changes', () => {
@@ -290,5 +298,38 @@ const initialState: EmployeeState = {
   //   });
   // });
 
- 
+  // it('should return filtered employees when text is provided', () => {
+  //   const text = 'doe';
+  //   component.employeesList = [ 
+  //     {empId: '1',first_name: 'John',last_name: 'Doe',emailID: 'john.doe@example.com',address: '123 Main St, Anytown USA',mobile: 1234567890, Active: true, projectId:''  }, 
+  //     {empId: '2', first_name: 'Jane', last_name: 'Doe', emailID: 'jane.doe@example.com', address: '456 Elm St, Anytown USA', mobile: 2345678901, Active: false, projectId:'' },
+  //     {empId: '3', first_name: 'Bob',last_name: 'Smith', emailID: 'bob.smith@example.com', address: '789 Oak St, Anytown USA', mobile: 3456789012, Active: true, projectId:''}];
+
+  //   const expectedResults = [ 
+  //     {empId: '1',first_name: 'John',last_name: 'Doe',emailID: 'john.doe@example.com',address: '123 Main St, Anytown USA',mobile: 1234567890, Active: true, projectId:''  }, 
+  //     {empId: '2', first_name: 'Jane', last_name: 'Doe', emailID: 'jane.doe@example.com', address: '456 Elm St, Anytown USA', mobile: 2345678901, Active: false, projectId:'' },
+  //     ];
+
+  //   const result = component.search(text);
+
+  //   console.log("zzz1: ", result)
+  //   expect(result).toEqual(expectedResults);
+  // });
+
+  // it('should return all employees when no text is provided', () => {
+  //   // const expectedResults = [      {        empId: '1',        first_name: 'John',        last_name: 'Doe',        emailID: 'johndoe@example.com',        address: '123 Main St, Anytown USA',        mobile: '555-1234',        Active: true      },      {        empId: '2',        first_name: 'Jane',        last_name: 'Doe',        emailID: 'janedoe@example.com',        address: '456 Elm St, Anytown USA',        mobile: '555-5678',        Active: true      },      {        empId: '3',        first_name: 'Bob',        last_name: 'Smith',        emailID: 'bobsmith@example.com',        address: '789 Oak St, Anytown USA',        mobile: '555-9012',        Active: false      }    ];
+  //   component.employeesList = [ 
+  //     {empId: '1',first_name: 'John',last_name: 'Doe',emailID: 'john.doe@example.com',address: '123 Main St, Anytown USA',mobile: 1234567890, Active: true, projectId:''  }, 
+  //     {empId: '2', first_name: 'Jane', last_name: 'Doe', emailID: 'jane.doe@example.com', address: '456 Elm St, Anytown USA', mobile: 2345678901, Active: false, projectId:'' },
+  //     {empId: '3', first_name: 'Bob',last_name: 'Smith', emailID: 'bob.smith@example.com', address: '789 Oak St, Anytown USA', mobile: 3456789012, Active: true, projectId:''}];
+
+  //   const expectedResults = [ 
+  //     {empId: '1',first_name: 'John',last_name: 'Doe',emailID: 'john.doe@example.com',address: '123 Main St, Anytown USA',mobile: 1234567890, Active: true, projectId:''  }, 
+  //     {empId: '2', first_name: 'Jane', last_name: 'Doe', emailID: 'jane.doe@example.com', address: '456 Elm St, Anytown USA', mobile: 2345678901, Active: false, projectId:'' },
+  //     {empId: '3', first_name: 'Bob',last_name: 'Smith', emailID: 'bob.smith@example.com', address: '789 Oak St, Anytown USA', mobile: 3456789012, Active: true, projectId:''}];
+
+  //   const result = component.search('');
+  //   console.log("zzz2: ", result)
+  //   expect(result).toEqual(expectedResults);
+  // });
 });

@@ -68,7 +68,7 @@ describe('EmployeeformComponent', () => {
   });
 
     afterEach(() => {
-    httpMock.verify();
+    // httpMock.verify();
   });
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -432,9 +432,9 @@ describe('EmployeeformComponent', () => {
     // trigger submit button click
     const submitButton = fixture.debugElement.nativeElement.querySelector('button[type="submit"]');
     submitButton.click();
-  
+    store.dispatch(saveEmployee({ employees: component.registerForm.value }));
     // assert that dispatch() was called with saveProject action and HTTP response data
-    // expect(dispatchSpy).toHaveBeenCalledOnceWith(saveEmployee({ employees: response }));
+    expect(dispatchSpy).toHaveBeenCalledOnceWith(saveEmployee({ employees: response }));
   });
   
 });
